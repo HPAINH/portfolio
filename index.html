@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Герман Гаджимагомедов · Системный и бизнес-аналитик</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F2F3F0;
+    --paper-2:#EAEBE6;
+    --ink:#15171C;
+    --ink-soft:#565B63;
+    --line:#CDD0C9;
+    --line-soft:#DEE0DA;
+    --accent:#1F40AE;
+    --accent-soft:#E3E8F8;
+    --amber:#B5641A;
+    --display:'Space Grotesk',sans-serif;
+    --body:'Inter',sans-serif;
+    --mono:'JetBrains Mono',monospace;
+    --spine-x:42px;
+  }
+
+  html[data-theme="dark"]{
+    --paper:#13161B;
+    --paper-2:#1B1F26;
+    --ink:#ECEEF1;
+    --ink-soft:#9AA2AD;
+    --line:#2C323B;
+    --line-soft:#21262E;
+    --accent:#6E8BFF;
+    --accent-soft:#1E2840;
+    --amber:#E0934A;
+  }
+  body,nav,.chip,.skill-grid .cell,.contact a,.spine::before{
+    transition:background-color .35s ease,color .35s ease,border-color .35s ease;
+  }
+
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:var(--body);
+    font-size:17px;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  a{color:inherit}
+
+  /* subtle drafting grid background */
+  body::before{
+    content:"";
+    position:fixed;
+    inset:0;
+    background-image:
+      linear-gradient(var(--line-soft) 1px,transparent 1px),
+      linear-gradient(90deg,var(--line-soft) 1px,transparent 1px);
+    background-size:32px 32px;
+    opacity:.35;
+    pointer-events:none;
+    z-index:0;
+    mask-image:linear-gradient(180deg,transparent,#000 8%,#000 92%,transparent);
+  }
+
+  .wrap{
+    position:relative;
+    z-index:1;
+    max-width:920px;
+    margin:0 auto;
+    padding:0 28px 120px;
+  }
+
+  /* ---- top bar ---- */
+  nav{
+    position:sticky;
+    top:0;
+    z-index:20;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:18px 0;
+    margin-bottom:40px;
+    font-family:var(--mono);
+    font-size:12.5px;
+    letter-spacing:.04em;
+    backdrop-filter:blur(8px);
+    background:color-mix(in srgb,var(--paper) 80%,transparent);
+    border-bottom:1px solid var(--line-soft);
+  }
+  nav .id{font-weight:600}
+  nav .id b{color:var(--accent)}
+  nav .links{display:flex;gap:22px}
+  nav .links a{
+    text-decoration:none;
+    color:var(--ink-soft);
+    transition:color .2s;
+  }
+  nav .links a:hover{color:var(--accent)}
+  nav .right{display:flex;align-items:center;gap:22px}
+  .toggle{
+    display:inline-flex;align-items:center;gap:7px;
+    font-family:var(--mono);font-size:12px;letter-spacing:.04em;
+    background:none;border:1px solid var(--line);border-radius:2px;
+    color:var(--ink-soft);padding:6px 10px;cursor:pointer;
+    transition:border-color .2s,color .2s;
+  }
+  .toggle:hover{border-color:var(--accent);color:var(--accent)}
+  .toggle .dot{width:8px;height:8px;border-radius:50%;background:var(--accent)}
+  @media(max-width:640px){ nav .links{display:none} }
+
+  /* ---- hero ---- */
+  .hero{
+    padding:48px 0 64px;
+    border-bottom:1px solid var(--line);
+    position:relative;
+  }
+  .eyebrow{
+    font-family:var(--mono);
+    font-size:12px;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    color:var(--accent);
+    margin-bottom:22px;
+  }
+  .hero h1{
+    font-family:var(--display);
+    font-weight:600;
+    font-size:clamp(42px,8vw,76px);
+    line-height:.98;
+    letter-spacing:-.02em;
+    margin-bottom:18px;
+  }
+  .hero .role{
+    font-family:var(--display);
+    font-weight:400;
+    font-size:clamp(19px,3.2vw,26px);
+    color:var(--ink-soft);
+    margin-bottom:26px;
+  }
+  .hero .thesis{
+    max-width:560px;
+    font-size:18px;
+    color:var(--ink-soft);
+    margin-bottom:34px;
+  }
+  .stack{display:flex;flex-wrap:wrap;gap:8px}
+  .chip{
+    font-family:var(--mono);
+    font-size:12px;
+    padding:5px 11px;
+    border:1px solid var(--line);
+    border-radius:2px;
+    background:var(--paper);
+    color:var(--ink-soft);
+  }
+
+  /* ---- spine ---- */
+  .spine{
+    position:relative;
+    padding-left:calc(var(--spine-x) + 26px);
+  }
+  .spine::before{
+    content:"";
+    position:absolute;
+    left:var(--spine-x);
+    top:0;
+    bottom:0;
+    width:1.5px;
+    background:var(--line);
+  }
+  /* accent line fills as you scroll through the system */
+  .spine::after{
+    content:"";
+    position:absolute;
+    left:var(--spine-x);
+    top:0;
+    width:1.5px;
+    height:var(--fill,0%);
+    background:var(--accent);
+    transition:height .12s linear;
+  }
+
+  section.node{
+    position:relative;
+    padding:54px 0;
+    border-bottom:1px solid var(--line-soft);
+  }
+  section.node:last-of-type{border-bottom:none}
+  /* node marker on the spine */
+  section.node > .marker{
+    position:absolute;
+    left:calc(-1 * (var(--spine-x) + 26px) + var(--spine-x) - 5.5px);
+    top:60px;
+    width:13px;
+    height:13px;
+    border-radius:50%;
+    background:var(--paper);
+    border:1.5px solid var(--accent);
+    z-index:2;
+  }
+  section.node > .marker::after{
+    content:"";
+    position:absolute;
+    inset:3px;
+    border-radius:50%;
+    background:var(--accent);
+    transform:scale(0);
+    transition:transform .3s ease;
+  }
+  section.node.active > .marker{
+    box-shadow:0 0 0 4px var(--accent-soft);
+  }
+  section.node.active > .marker::after{transform:scale(1)}
+
+  nav .links a.active{color:var(--accent);font-weight:600}
+
+  .node-id{
+    font-family:var(--mono);
+    font-size:12px;
+    letter-spacing:.1em;
+    color:var(--ink-soft);
+    margin-bottom:8px;
+  }
+  .node-id b{color:var(--accent);font-weight:600}
+  h2{
+    font-family:var(--display);
+    font-weight:600;
+    font-size:clamp(26px,4.5vw,34px);
+    letter-spacing:-.015em;
+    margin-bottom:6px;
+  }
+  .node-sub{color:var(--ink-soft);font-size:15.5px;margin-bottom:30px}
+
+  /* ---- skills grid ---- */
+  .skill-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--line-soft);border:1px solid var(--line-soft)}
+  .skill-grid .cell{background:var(--paper);padding:20px 22px}
+  .skill-grid .cell .k{
+    font-family:var(--mono);font-size:11.5px;letter-spacing:.08em;
+    text-transform:uppercase;color:var(--accent);margin-bottom:12px;
+  }
+  .skill-grid .cell .v{display:flex;flex-wrap:wrap;gap:7px}
+  .skill-grid .cell .v span{
+    font-family:var(--mono);font-size:12.5px;color:var(--ink-soft);
+  }
+  .skill-grid .cell .v span:not(:last-child)::after{content:" /";color:var(--line)}
+  @media(max-width:640px){ .skill-grid{grid-template-columns:1fr} }
+
+  /* ---- cases ---- */
+  .cases{display:flex;flex-direction:column;gap:0}
+  .case{
+    padding:26px 0;
+    border-top:1px solid var(--line-soft);
+    display:grid;
+    grid-template-columns:64px 1fr;
+    gap:22px;
+  }
+  .case:first-child{border-top:none}
+  .case .tag{
+    font-family:var(--mono);
+    font-size:12px;
+    font-weight:600;
+    color:var(--accent);
+    padding-top:3px;
+  }
+  .case h3{
+    font-family:var(--display);
+    font-weight:600;
+    font-size:19px;
+    margin-bottom:6px;
+  }
+  .case .meta{
+    font-family:var(--mono);
+    font-size:11.5px;
+    color:var(--ink-soft);
+    margin-bottom:12px;
+  }
+  .case p{font-size:15.5px;color:var(--ink-soft);margin-bottom:12px;max-width:600px}
+  .case .arts{display:flex;flex-wrap:wrap;gap:7px}
+  .case .arts span{
+    font-size:11.5px;font-family:var(--mono);
+    padding:3px 9px;border:1px solid var(--line);border-radius:2px;color:var(--ink-soft);
+  }
+  .case .res{
+    display:inline-block;margin-top:12px;font-size:14px;font-weight:500;
+    color:var(--ink);border-left:2px solid var(--amber);padding-left:12px;
+  }
+  @media(max-width:640px){
+    .case{grid-template-columns:1fr;gap:8px}
+  }
+
+  /* ---- education + contact ---- */
+  .rows{display:flex;flex-direction:column}
+  .row{
+    display:grid;grid-template-columns:1fr auto;gap:16px;
+    padding:16px 0;border-top:1px solid var(--line-soft);align-items:baseline;
+  }
+  .row:first-child{border-top:none}
+  .row .t{font-weight:500}
+  .row .t small{display:block;color:var(--ink-soft);font-weight:400;font-size:14px;margin-top:2px}
+  .row .d{font-family:var(--mono);font-size:12.5px;color:var(--ink-soft);white-space:nowrap}
+
+  .contact{
+    margin-top:14px;display:flex;flex-wrap:wrap;gap:10px;
+  }
+  .contact a{
+    font-family:var(--mono);font-size:13px;text-decoration:none;
+    padding:10px 16px;border:1px solid var(--ink);border-radius:2px;
+    transition:all .2s;
+  }
+  .contact a:hover{background:var(--ink);color:var(--paper)}
+  .contact a.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+  .contact a.primary:hover{background:var(--ink);border-color:var(--ink)}
+
+  footer{
+    margin-top:60px;padding-top:24px;border-top:1px solid var(--line);
+    font-family:var(--mono);font-size:11.5px;color:var(--ink-soft);
+    display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;
+  }
+
+  /* reveal on scroll */
+  .reveal{opacity:0;transform:translateY(14px);transition:opacity .6s ease,transform .6s ease}
+  .reveal.in{opacity:1;transform:none}
+
+  @media(prefers-reduced-motion:reduce){
+    *{animation:none!important;transition:none!important}
+    .reveal{opacity:1;transform:none}
+    section.node.active > .marker::after{transform:scale(1)}
+    html{scroll-behavior:auto}
+  }
+</style>
+<script>
+  (function(){
+    try{
+      var t=localStorage.getItem('theme');
+      if(!t){ t=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light'; }
+      document.documentElement.setAttribute('data-theme',t);
+    }catch(e){}
+  })();
+</script>
+</head>
+<body>
+<div class="wrap">
+
+  <nav>
+    <div class="id"><b>///</b> Г. Гаджимагомедов</div>
+    <div class="right">
+      <div class="links">
+        <a href="#skills">навыки</a>
+        <a href="#analysis">анализ</a>
+        <a href="#data">ML</a>
+        <a href="#pub">публикации</a>
+        <a href="#coursework">курсовые</a>
+        <a href="#dev">разработка</a>
+        <a href="#contact">контакты</a>
+      </div>
+      <button class="toggle" id="themeToggle" aria-label="Переключить тему">
+        <span class="dot"></span><span id="themeLabel">light</span>
+      </button>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <div class="eyebrow">// профиль системы</div>
+    <h1>Герман<br>Гаджимагомедов</h1>
+    <div class="role">Системный и бизнес-аналитик</div>
+    <p class="thesis">Прохожу полный цикл анализа: от интервью со стейкхолдерами и сбора требований до моделирования процессов, проектирования данных и запуска решений. Помогаю превращать бизнес-задачи в формальные модели и работающие продукты.</p>
+    <div class="stack">
+      <span class="chip">BPMN 2.0</span>
+      <span class="chip">UML</span>
+      <span class="chip">IDEF0/IDEF3</span>
+      <span class="chip">SQL · PostgreSQL</span>
+      <span class="chip">Python</span>
+      <span class="chip">REST API</span>
+      <span class="chip">Docker · Git</span>
+      <span class="chip">ML / AI</span>
+    </div>
+  </header>
+
+  <main class="spine">
+
+    <!-- SKILLS -->
+    <section class="node" id="skills">
+      <span class="marker"></span>
+      <div class="node-id"><b>[ STACK ]</b> · компетенции</div>
+      <h2>Навыки и инструменты</h2>
+      <p class="node-sub">Сгруппированы по слоям работы аналитика — от моделирования до данных и инженерии.</p>
+      <div class="skill-grid reveal">
+        <div class="cell">
+          <div class="k">Моделирование</div>
+          <div class="v"><span>BPMN 2.0</span><span>UML</span><span>IDEF0</span><span>IDEF3</span><span>DFD</span><span>ARIS</span></div>
+        </div>
+        <div class="cell">
+          <div class="k">Данные</div>
+          <div class="v"><span>SQL</span><span>PostgreSQL</span><span>ER-моделирование</span></div>
+        </div>
+        <div class="cell">
+          <div class="k">Технологии</div>
+          <div class="v"><span>Python</span><span>REST API</span><span>Docker</span><span>Git</span></div>
+        </div>
+        <div class="cell">
+          <div class="k">AI / ML</div>
+          <div class="v"><span>Разработка AI-сервисов</span><span>Тестирование</span><span>CatBoost</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ANALYSIS -->
+    <section class="node" id="analysis">
+      <span class="marker"></span>
+      <div class="node-id"><b>[ SA ]</b> · системный и бизнес-анализ</div>
+      <h2>Анализ и моделирование процессов</h2>
+      <p class="node-sub">Полный цикл: исследование AS-IS, проектирование TO-BE, формальные модели и обоснование решений.</p>
+      <div class="cases">
+        <div class="case reveal">
+          <div class="tag">SA-01</div>
+          <div>
+            <h3>AI-планировка квартир — дипломный проект</h3>
+            <div class="meta">ООО «УКОМ СВ» · ВКР</div>
+            <p>Спроектировал процесс внедрения ИИ-ассистента для планировки квартир: модели AS-IS и TO-BE, презентация защиты, экономическое обоснование и блок Q&amp;A.</p>
+            <div class="arts"><span>AS-IS / TO-BE BPMN</span><span>Презентация</span><span>Экономобоснование</span><span>Защита</span></div>
+            <div class="res">Полный пакет аналитика «от проблемы до экономики решения»</div>
+          </div>
+        </div>
+        <div class="case reveal">
+          <div class="tag">SA-02</div>
+          <div>
+            <h3>Банковский процесс с биометрией</h3>
+            <div class="meta">Учебно-практический кейс</div>
+            <p>Спроектировал TO-BE процесс с учётом российской регуляторики и государственных систем — ЕБС и ЕСИА. Формальный отчёт и диаграммы в нотации BPMN 2.0.</p>
+            <div class="arts"><span>BPMN 2.0</span><span>ЕБС / ЕСИА</span><span>TO-BE отчёт</span></div>
+            <div class="res">Моделирование в реальном регуляторном контексте РФ</div>
+          </div>
+        </div>
+        <div class="case reveal">
+          <div class="tag">SA-03</div>
+          <div>
+            <h3>Документация API и проектирование данных</h3>
+            <div class="meta">Стажировка · аналитика</div>
+            <p>Сбор требований через интервью со стейкхолдерами, ER-моделирование, документирование REST API, обучение конечных пользователей.</p>
+            <div class="arts"><span>Интервью</span><span>Требования</span><span>ER-модель</span><span>REST API</span></div>
+            <div class="res">Опыт на всех этапах аналитического цикла</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- DATA / ML -->
+    <section class="node" id="data">
+      <span class="marker"></span>
+      <div class="node-id"><b>[ ML ]</b> · данные и машинное обучение</div>
+      <h2>Данные, ML и AI-сервисы</h2>
+      <p class="node-sub">Работа с данными и моделями там, где аналитика встречается с инженерией.</p>
+      <div class="cases">
+        <div class="case reveal">
+          <div class="tag">ML-01</div>
+          <div>
+            <h3>Сегментация левого предсердия на МРТ</h3>
+            <div class="meta">Итоговая аттестационная работа · переподготовка</div>
+            <p>Применение механизма внимания (attention) для повышения точности сегментации левого предсердия на МРТ-изображениях. Программа «Разработка и тестирование сервисов искусственного интеллекта».</p>
+            <div class="arts"><span>Deep Learning</span><span>Attention</span><span>Сегментация</span><span>Медицинские изображения</span></div>
+            <div class="res">Attention-механизм против базовой архитектуры</div>
+          </div>
+        </div>
+        <div class="case reveal">
+          <div class="tag">ML-02</div>
+          <div>
+            <h3>Диагностика зубных заболеваний по МРТ/КТ</h3>
+            <div class="meta">III проектная конференция «Прикладная экономика» · РТУ МИРЭА</div>
+            <p>Проект системы диагностики стоматологических заболеваний по снимкам МРТ/КТ с применением машинного обучения.</p>
+            <div class="arts"><span>Machine Learning</span><span>МРТ / КТ</span><span>Компьютерное зрение</span></div>
+            <div class="res">ML-продукт с экономической постановкой</div>
+          </div>
+        </div>
+        <div class="case reveal">
+          <div class="tag">ML-03</div>
+          <div>
+            <h3>Модуль ценообразования на CatBoost</h3>
+            <div class="meta">ООО «ОКС СТК» · аналитика недвижимости</div>
+            <p>Экономическая часть дипломной работы: модель ценообразования на CatBoost и расчёт эффективности — ROI и срок окупаемости.</p>
+            <div class="arts"><span>CatBoost</span><span>ROI</span><span>Срок окупаемости</span></div>
+            <div class="res">ML-решение, доведённое до экономического эффекта</div>
+          </div>
+        </div>
+        <div class="case reveal">
+          <div class="tag">ML-04</div>
+          <div>
+            <h3>Программа «Цифровая кафедра»</h3>
+            <div class="meta">Дополнительное образование</div>
+            <p>Разработка и тестирование AI-сервисов: от постановки задачи до проверки качества модели.</p>
+            <div class="arts"><span>AI-сервисы</span><span>Тестирование</span><span>Python</span></div>
+            <div class="res">Практика создания и проверки ML-продуктов</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PUBLICATIONS -->
+    <section class="node" id="pub">
+      <span class="marker"></span>
+      <div class="node-id"><b>[ PUB ]</b> · научные публикации и доклады</div>
+      <h2>Публикации и конференции</h2>
+      <p class="node-sub">Научные статьи и конференц-доклады — от прикладного ИИ до экономического и социального анализа.</p>
+      <div class="cases">
+        <div class="case reveal">
+          <div class="tag">PUB-01</div>
+          <div>
+            <h3>Планировка квартир с применением ИИ</h3>
+            <div class="meta">Научная статья · РИНЦ</div>
+            <p>Повышение эффективности процесса планировки квартир при проектировании жилых комплексов с применением технологий искусственного интеллекта.</p>
+            <div class="arts"><span>РИНЦ</span><span>ИИ</span><span>Проектирование</span></div>
+            <div class="res">Индексируемая публикация по теме ВКР</div>
+          </div>
+        </div>
+        <div class="case reveal">
+          <div class="tag">PUB-02</div>
+          <div>
+            <h3>Демографический анализ в РФ</h3>
+            <div class="meta">Конференция студентов и аспирантов</div>
+            <p>Анализ демографических тенденций в Российской Федерации.</p>
+            <div class="arts"><span>Анализ данных</span><span>Демография</span></div>
+          </div>
+        </div>
+        <div class="case reveal">
+          <div class="tag">PUB-03</div>
+          <div>
+            <h3>Рост пенсий и инфляция в РФ</h3>
+            <div class="meta">Конференция студентов и аспирантов</div>
+            <p>Сравнительный анализ роста пенсий в соотношении с ростом инфляции в РФ.</p>
+            <div class="arts"><span>Сравнительный анализ</span><span>Экономика</span></div>
+          </div>
+        </div>
+        <div class="case reveal">
+          <div class="tag">PUB-04</div>
+          <div>
+            <h3>ЦФА: достоинства, недостатки, сравнение</h3>
+            <div class="meta">Конференция студентов и аспирантов</div>
+            <p>Достоинства и недостатки цифровых финансовых активов и их сравнение с иными финансовыми активами.</p>
+            <div class="arts"><span>ЦФА</span><span>Финансовые активы</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- COURSEWORK -->
+    <section class="node" id="coursework">
+      <span class="marker"></span>
+      <div class="node-id"><b>[ CW ]</b> · курсовые работы</div>
+      <h2>Курсовые проекты</h2>
+      <p class="node-sub">Учебные работы по разным дисциплинам — программирование, имитационное моделирование, финансовый анализ.</p>
+      <div class="cases">
+        <div class="case reveal">
+          <div class="tag">CW-01</div>
+          <div>
+            <h3>Расчёт стоимости квартиры на C++</h3>
+            <div class="meta">Курсовая · программирование</div>
+            <p>Расчёт стоимости квартиры по площади и хранение данных для формирования каталога.</p>
+            <div class="arts"><span>C++</span><span>Хранение данных</span><span>Каталог</span></div>
+          </div>
+        </div>
+        <div class="case reveal">
+          <div class="tag">CW-02</div>
+          <div>
+            <h3>Моделирование движения студентов</h3>
+            <div class="meta">Курсовая · имитационное моделирование</div>
+            <p>Имитационная модель движения студентов в университете в среде AnyLogic.</p>
+            <div class="arts"><span>AnyLogic</span><span>Имитационное моделирование</span></div>
+          </div>
+        </div>
+        <div class="case reveal">
+          <div class="tag">CW-03</div>
+          <div>
+            <h3>Инвестиционная эффективность «Яндекс»</h3>
+            <div class="meta">Курсовая · анализ ФХД</div>
+            <p>Оценка инвестиционной эффективности ООО «Яндекс» в рамках анализа финансово-хозяйственной деятельности.</p>
+            <div class="arts"><span>Анализ ФХД</span><span>Инвестиции</span><span>Финансы</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- DEV -->
+    <section class="node" id="dev">
+      <span class="marker"></span>
+      <div class="node-id"><b>[ DEV ]</b> · разработка</div>
+      <h2>Инженерия и собственные продукты</h2>
+      <p class="node-sub">Практические, разворачиваемые инструменты — от веб-приложений до мобильных.</p>
+      <div class="cases">
+        <div class="case reveal">
+          <div class="tag">DEV-01</div>
+          <div>
+            <h3>HTML5 PDF-редактор</h3>
+            <div class="meta">Личный проект · веб</div>
+            <p>Браузерный редактор PDF: редактирование текста со встроенными шрифтами, OCR и безопасное затирание конфиденциальных данных.</p>
+            <div class="arts"><span>HTML5</span><span>OCR</span><span>Встроенные шрифты</span><span>Redaction</span></div>
+            <div class="res">Рабочий инструмент, всё считается в браузере</div>
+          </div>
+        </div>
+        <div class="case reveal">
+          <div class="tag">DEV-02</div>
+          <div>
+            <h3>Snake III — веб-ремейк</h3>
+            <div class="meta">Личный проект · веб / PWA</div>
+            <p>Воссоздание классической игры Nokia с изометрическим рендерингом и упаковкой в PWA для установки как приложение.</p>
+            <div class="arts"><span>JavaScript</span><span>Изометрия</span><span>PWA</span></div>
+            <div class="res">От идеи до устанавливаемого приложения</div>
+          </div>
+        </div>
+        <div class="case reveal">
+          <div class="tag">DEV-03</div>
+          <div>
+            <h3>NFC-приложение на Kotlin</h3>
+            <div class="meta">Личный проект · Android</div>
+            <p>Android-приложение для чтения NFC-меток. Настройка окружения и работа с аппаратным API.</p>
+            <div class="arts"><span>Kotlin</span><span>Android</span><span>NFC</span></div>
+            <div class="res">Опыт нативной мобильной разработки</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTENT -->
+    <section class="node" id="content">
+      <span class="marker"></span>
+      <div class="node-id"><b>[ DOC ]</b> · образовательный контент</div>
+      <h2>Структурирование знаний</h2>
+      <p class="node-sub">Крупные методические материалы — умение разложить сложную тему в понятную систему.</p>
+      <div class="cases">
+        <div class="case reveal">
+          <div class="tag">DOC-01</div>
+          <div>
+            <h3>Гайд для джунов-аналитиков</h3>
+            <div class="meta">25 глав · 8 частей</div>
+            <p>Самоучитель для начинающих системных аналитиков с учётом реалий российского рынка: уход Atlassian, отечественные альтернативы инструментов.</p>
+            <div class="arts"><span>Системный анализ</span><span>Рынок РФ</span><span>Инструменты</span></div>
+          </div>
+        </div>
+        <div class="case reveal">
+          <div class="tag">DOC-02</div>
+          <div>
+            <h3>Методичка по SQL · PostgreSQL 17</h3>
+            <div class="meta">29 глав · аудитория ML-практиков</div>
+            <p>Методология изучения SQL вокруг датасета интернет-магазина, ориентированная на специалистов по машинному обучению.</p>
+            <div class="arts"><span>SQL</span><span>PostgreSQL 17</span><span>Датасет shop</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- EDUCATION -->
+    <section class="node" id="education">
+      <span class="marker"></span>
+      <div class="node-id"><b>[ EDU ]</b> · образование</div>
+      <h2>Образование и языки</h2>
+      <div class="rows">
+        <div class="row">
+          <div class="t">РТУ МИРЭА<small>Бизнес-информатика · группа УИБО-06-22</small></div>
+          <div class="d">бакалавриат</div>
+        </div>
+        <div class="row">
+          <div class="t">Программа «Цифровая кафедра»<small>Разработка и тестирование AI-сервисов</small></div>
+          <div class="d">доп. образование</div>
+        </div>
+        <div class="row">
+          <div class="t">Языки<small>Русский — родной · Английский — B2 · Японский — A2 · Арабский — A1 · Турецкий — A1</small></div>
+          <div class="d">RU · EN · JA · AR · TR</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section class="node" id="contact">
+      <span class="marker"></span>
+      <div class="node-id"><b>[ END ]</b> · связаться</div>
+      <h2>Контакты</h2>
+      <p class="node-sub">Замените значения в ссылках на свои перед публикацией.</p>
+      <div class="contact">
+        <a class="primary" href="mailto:german.gadzhimagomedov.2003@mail.ru">german.gadzhimagomedov.2003@mail.ru</a>
+        <a href="https://t.me/SA_BA_ML">Telegram</a>
+        <a href="https://github.com/HPAINH">GitHub</a>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <span>© 2026 · Герман Гаджимагомедов</span>
+    <span>портфолио · v1</span>
+  </footer>
+
+</div>
+
+<script>
+  // ---- scroll reveal ----
+  const io=new IntersectionObserver((es)=>{
+    es.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target);} });
+  },{threshold:.12});
+  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+  // ---- spine fill + scrollspy ----
+  const spine=document.querySelector('.spine');
+  const sections=[...document.querySelectorAll('section.node')];
+  const navLinks=[...document.querySelectorAll('nav .links a')];
+  let ticking=false;
+
+  function update(){
+    ticking=false;
+    const rect=spine.getBoundingClientRect();
+    const vh=window.innerHeight;
+    // progress of viewport center through the spine
+    const total=rect.height;
+    const passed=Math.min(Math.max(vh*0.5 - rect.top,0),total);
+    const pct=total>0 ? (passed/total)*100 : 0;
+    spine.style.setProperty('--fill',pct.toFixed(2)+'%');
+
+    // active section = the one crossing the viewport mid-line
+    let activeId=sections[0].id;
+    for(const s of sections){
+      if(s.getBoundingClientRect().top <= vh*0.4) activeId=s.id;
+    }
+    sections.forEach(s=>s.classList.toggle('active',s.id===activeId));
+    navLinks.forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+activeId));
+  }
+  function onScroll(){ if(!ticking){ requestAnimationFrame(update); ticking=true; } }
+  window.addEventListener('scroll',onScroll,{passive:true});
+  window.addEventListener('resize',onScroll);
+  update();
+
+  // ---- theme toggle (persists when storage is available) ----
+  const root=document.documentElement;
+  const label=document.getElementById('themeLabel');
+  function setTheme(t){
+    root.setAttribute('data-theme',t);
+    label.textContent=t;
+    try{ localStorage.setItem('theme',t); }catch(e){}
+  }
+  let saved=null;
+  try{ saved=localStorage.getItem('theme'); }catch(e){}
+  if(!saved){
+    saved=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';
+  }
+  setTheme(saved);
+  document.getElementById('themeToggle').addEventListener('click',()=>{
+    setTheme(root.getAttribute('data-theme')==='dark'?'light':'dark');
+  });
+</script>
+</body>
+</html>
