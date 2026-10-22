@@ -1,0 +1,1116 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Герман Гаджимагомедов</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Системный аналитик: требования, BPMN, UML, REST API, проектирование данных и ИИ-решений.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;800&family=Golos+Text:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap">
+<style>
+/* Layout: живая спецификация — сайт читается как документ аналитика: разделы с номерами, BPMN-холст в шапке, API-консоль, ER-схема, матрица трассировки */
+:root{
+  --bg:#edf0f5;
+  --surface:#ffffff;
+  --surface-2:#e3e8f1;
+  --ink:#0e1730;
+  --muted:#56627a;
+  --line:#d2d9e5;
+  --accent:#3b3bd6;
+  --accent-soft:#e4e4fb;
+  --on-accent:#ffffff;
+  --flow:#0b8f6c;
+  --warn:#d9480f;
+  --dot:#c6cedd;
+  --console-bg:#0b1124;
+  --console-line:#1d2846;
+  --console-fg:#dbe3f7;
+  --console-dim:#7d8bab;
+  --c-key:#a5b4ff;
+  --c-str:#8fe3bd;
+  --c-num:#ffc48a;
+  --c-bool:#ff9ec4;
+  --display:"Unbounded", "Arial Black", system-ui, sans-serif;
+  --body:"Golos Text", "Segoe UI", system-ui, sans-serif;
+  --mono:"JetBrains Mono", ui-monospace, "Cascadia Mono", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0b1020; --surface:#121a2e; --surface-2:#18223b; --ink:#e6ebf5; --muted:#95a1b9; --line:#26314d;
+    --accent:#8b8cff; --accent-soft:#232a5a; --on-accent:#0b1020; --flow:#3ddc97; --warn:#ff8a50; --dot:#26314d;
+    --console-bg:#070b18; --console-line:#1a2440; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0b1020; --surface:#121a2e; --surface-2:#18223b; --ink:#e6ebf5; --muted:#95a1b9; --line:#26314d;
+  --accent:#8b8cff; --accent-soft:#232a5a; --on-accent:#0b1020; --flow:#3ddc97; --warn:#ff8a50; --dot:#26314d;
+  --console-bg:#070b18; --console-line:#1a2440; color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto} *,*::before,*::after{animation-duration:.001ms!important; animation-iteration-count:1!important; transition-duration:.001ms!important}}
+body{background:var(--bg); color:var(--ink); font-family:var(--body); font-size:16px; line-height:1.6; -webkit-font-smoothing:antialiased;
+  padding-left:max(16px, env(safe-area-inset-left, 0px)); padding-right:max(16px, env(safe-area-inset-right, 0px))}
+body::before{content:""; position:fixed; inset:0 0 auto; height:env(safe-area-inset-top, 0px); z-index:30; background:var(--bg)}
+a{color:var(--accent); text-underline-offset:3px}
+:focus-visible{outline:2px solid var(--accent); outline-offset:3px; border-radius:6px}
+.wrap{max-width:1180px; margin:0 auto}
+h1,h2,h3{font-family:var(--display); margin:0; line-height:1.08; text-wrap:balance; letter-spacing:-.01em}
+.mono{font-family:var(--mono)}
+.eyebrow{font-family:var(--mono); font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:var(--muted)}
+.eyebrow b{color:var(--accent); font-weight:500}
+
+/* progress + nav */
+.progress{position:fixed; top:env(safe-area-inset-top, 0px); left:0; height:3px; width:100%; transform-origin:0 50%; transform:scaleX(0); background:var(--accent); z-index:40}
+nav.top{position:sticky; top:env(safe-area-inset-top, 0px); z-index:20; background:color-mix(in srgb, var(--bg) 86%, transparent); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); border-bottom:1px solid var(--line); margin-inline:calc(-1 * max(16px, env(safe-area-inset-left, 0px)))}
+nav.top .in{max-width:1180px; margin:0 auto; display:flex; align-items:center; gap:18px; padding:12px max(16px, env(safe-area-inset-left, 0px))}
+.brand{font-family:var(--mono); font-size:13px; display:flex; align-items:center; gap:8px; white-space:nowrap}
+.brand i{width:8px; height:8px; border-radius:50%; background:var(--flow); box-shadow:0 0 0 0 color-mix(in srgb, var(--flow) 60%, transparent); animation:ping 2.2s infinite}
+@keyframes ping{70%{box-shadow:0 0 0 8px transparent}100%{box-shadow:0 0 0 0 transparent}}
+nav.top ul{display:flex; gap:18px; list-style:none; margin:0 auto 0 12px; padding:0; flex-wrap:wrap}
+nav.top ul a{color:var(--muted); text-decoration:none; font-size:14px; padding:4px 0; border-bottom:2px solid transparent}
+nav.top ul a:hover, nav.top ul a.on{color:var(--ink); border-bottom-color:var(--accent)}
+.navbtn{display:inline-flex; align-items:center; gap:8px; border:1px solid var(--line); background:var(--surface); color:var(--ink); border-radius:10px; padding:6px 10px; font:500 13px var(--body); cursor:pointer}
+.navbtn kbd{font:500 11px var(--mono); color:var(--muted); border:1px solid var(--line); border-radius:4px; padding:0 5px}
+@media (max-width:820px){ nav.top ul{display:none} .brand{margin-right:auto} }
+@media (max-width:460px){ .navbtn kbd{display:none} .brand{font-size:12px} nav.top .in{gap:10px} }
+
+/* hero */
+.hero{padding-block:56px 40px; position:relative}
+.hero::before{content:""; position:absolute; inset:0 calc(-1 * max(16px, env(safe-area-inset-left, 0px))); z-index:-1;
+  background-image:radial-gradient(var(--dot) 1.2px, transparent 1.3px); background-size:22px 22px;
+  -webkit-mask-image:linear-gradient(180deg, #000 30%, transparent); mask-image:linear-gradient(180deg, #000 30%, transparent)}
+.hero h1{font-size:clamp(30px, 6.2vw, 78px); font-weight:800; margin-top:18px; max-width:15ch}
+.hero h1 .w{display:inline-block; animation:rise .8s cubic-bezier(.2,.8,.2,1) both}
+.hero h1 .hl{color:var(--accent); position:relative}
+.hero h1 .hl::after{content:""; position:absolute; left:0; right:0; bottom:.04em; height:.12em; background:var(--flow); transform-origin:0 50%; animation:sweep 1s .9s cubic-bezier(.7,0,.2,1) both; border-radius:2px}
+@keyframes rise{from{transform:translateY(.6em); opacity:0}to{transform:none; opacity:1}}
+@keyframes sweep{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+.hero-grid{display:grid; grid-template-columns:minmax(0,.9fr) minmax(0,1.25fr); gap:40px; margin-top:40px; align-items:start}
+.lead{font-size:19px; max-width:44ch; margin:0}
+.lead b{font-weight:600}
+.actions{display:flex; flex-wrap:wrap; gap:10px; margin-top:26px}
+.btn{display:inline-flex; align-items:center; gap:8px; border-radius:12px; padding:11px 16px; font:600 15px var(--body); text-decoration:none; cursor:pointer; border:1px solid var(--line); background:var(--surface); color:var(--ink); transition:transform .15s, border-color .15s}
+.btn:hover{transform:translateY(-2px); border-color:var(--accent)}
+.btn.primary{background:var(--accent); color:var(--on-accent); border-color:var(--accent)}
+.toast{font:12px var(--mono); color:var(--muted); min-height:1.3em; margin-top:10px}
+.facts{display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:14px; margin-top:30px; padding-top:20px; border-top:1px solid var(--line)}
+.facts .v{font:500 24px var(--mono); font-variant-numeric:tabular-nums}
+@media (max-width:900px){ .hero-grid{grid-template-columns:1fr; gap:28px} }
+.facts .k{font-size:13px; color:var(--muted)}
+
+/* bpmn card */
+.card{background:var(--surface); border:1px solid var(--line); border-radius:18px; min-width:0}
+.bpmn-head{display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:10px; padding:12px 14px; border-bottom:1px solid var(--line)}
+.seg{display:inline-flex; background:var(--surface-2); border-radius:10px; padding:3px}
+.seg button{border:0; background:transparent; color:var(--muted); font:600 13px var(--mono); padding:6px 12px; border-radius:8px; cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--surface); color:var(--ink); box-shadow:0 1px 3px rgba(0,0,0,.12)}
+.bpmn-wrap{overflow-x:auto}
+#bpmn{display:block; width:100%; min-width:560px; height:auto}
+#bpmn text{font-family:var(--body)}
+.bpmn-foot{display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); border-top:1px solid var(--line)}
+.bpmn-foot div{padding:12px 14px; border-right:1px solid var(--line); min-width:0}
+.bpmn-foot div:last-child{border-right:0}
+.bpmn-foot .v{font:600 20px var(--mono); font-variant-numeric:tabular-nums; transition:color .3s}
+.bpmn-foot .k{font-size:12px; color:var(--muted)}
+.is-as .bpmn-foot .v.st{color:var(--warn)}
+.is-to .bpmn-foot .v.st{color:var(--flow)}
+
+/* ticker */
+.ticker{overflow:hidden; border-block:1px solid var(--line); margin-inline:calc(-1 * max(16px, env(safe-area-inset-left, 0px))); padding-block:14px; background:var(--surface)}
+.ticker .row{display:flex; gap:40px; width:max-content; animation:scroll 40s linear infinite; font:500 15px var(--mono); color:var(--muted)}
+.ticker .row span::before{content:"◆"; color:var(--accent); margin-right:14px; font-size:10px; vertical-align:2px}
+@keyframes scroll{to{transform:translateX(-50%)}}
+.ticker:hover .row{animation-play-state:paused}
+
+/* sections */
+section{padding-block:76px; scroll-margin-top:60px}
+.sec-head{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:24px; align-items:end; margin-bottom:36px}
+.sec-head h2{font-size:clamp(28px, 4.2vw, 50px); font-weight:800; margin-top:10px}
+.sec-head p{margin:0; color:var(--muted); max-width:52ch}
+@media (max-width:820px){ .sec-head{grid-template-columns:1fr} }
+
+/* metrics */
+.metrics{display:grid; grid-template-columns:repeat(4, minmax(0,1fr)); gap:0; border:1px solid var(--line); border-radius:18px; overflow:hidden; background:var(--surface)}
+.metric{padding:22px 20px; border-right:1px solid var(--line); border-bottom:1px solid var(--line); min-width:0}
+.metric:nth-child(4n){border-right:0}
+.metric:nth-last-child(-n+4){border-bottom:0}
+.metric .v{font:700 clamp(30px, 3.6vw, 44px) var(--display); font-variant-numeric:tabular-nums; letter-spacing:-.02em}
+.metric .v.g{color:var(--flow)} .metric .v.a{color:var(--accent)}
+.metric .k{font-size:14px; margin-top:6px}
+.metric .c{font:11px var(--mono); color:var(--muted); margin-top:8px; text-transform:uppercase; letter-spacing:.06em}
+
+/* pipeline */
+.pipe{display:grid; grid-template-columns:repeat(6, minmax(0,1fr)); gap:6px}
+.pipe button{position:relative; text-align:left; border:1px solid var(--line); background:var(--surface); color:var(--ink); padding:14px 14px 14px 16px; font:inherit; cursor:pointer; border-radius:12px; transition:border-color .2s, background .2s, transform .2s; min-width:0}
+.pipe button:hover{transform:translateY(-2px)}
+.pipe button .n{font:500 11px var(--mono); color:var(--muted)}
+.pipe button b{display:block; font:700 15px var(--display); margin-top:6px; overflow-wrap:anywhere}
+.pipe button[aria-selected="true"]{border-color:var(--accent); background:var(--accent-soft)}
+.pipe button[aria-selected="true"] .n{color:var(--accent)}
+.stage{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.1fr); gap:24px; margin-top:16px; padding:24px; background:var(--surface); border:1px solid var(--line); border-radius:18px}
+.stage h3{font-size:22px}
+.stage ul{margin:12px 0 0; padding-left:18px; color:var(--muted)}
+.stage ul li{margin-top:4px}
+.stage .where{font:12px var(--mono); color:var(--accent); margin-top:14px}
+.artifact{background:var(--console-bg); color:var(--console-fg); border-radius:12px; padding:16px; font:13px/1.6 var(--mono); white-space:pre-wrap; min-width:0; overflow-x:auto; position:relative}
+.artifact .tag{position:absolute; top:10px; right:12px; font-size:10px; color:var(--console-dim); text-transform:uppercase; letter-spacing:.08em}
+.artifact .k{color:var(--c-key)} .artifact .s{color:var(--c-str)} .artifact .n{color:var(--c-num)} .artifact .d{color:var(--console-dim)}
+@media (max-width:900px){ .pipe{grid-template-columns:repeat(3, minmax(0,1fr))} .stage{grid-template-columns:1fr} .metrics{grid-template-columns:repeat(2, minmax(0,1fr))} .metric:nth-child(4n){border-right:1px solid var(--line)} .metric:nth-child(2n){border-right:0} .metric:nth-last-child(-n+4){border-bottom:1px solid var(--line)} .metric:nth-last-child(-n+2){border-bottom:0} }
+@media (max-width:460px){ .pipe{grid-template-columns:repeat(2, minmax(0,1fr))} .facts{grid-template-columns:1fr 1fr} }
+
+/* cases */
+.case{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.05fr); gap:36px; padding-block:40px; border-top:1px solid var(--line); align-items:start}
+.case:first-of-type{border-top:0; padding-top:0}
+.case .meta{display:flex; flex-wrap:wrap; gap:8px 14px; align-items:center}
+.pill{font:500 11px var(--mono); text-transform:uppercase; letter-spacing:.06em; padding:4px 9px; border-radius:999px; background:var(--accent-soft); color:var(--accent)}
+.pill.g{background:color-mix(in srgb, var(--flow) 16%, transparent); color:var(--flow)}
+.case h3{font-size:clamp(24px, 3vw, 34px); margin-top:12px}
+.case .role{color:var(--accent); font-weight:600; margin-top:6px}
+.case p{color:var(--muted); max-width:58ch}
+.case ul{padding-left:18px; margin:12px 0 0; max-width:62ch}
+.case ul li{margin-top:6px}
+.case ul li b{font-weight:600}
+.res{display:flex; flex-wrap:wrap; gap:10px; margin-top:18px}
+.res > div{border:1px solid var(--line); background:var(--surface); border-radius:12px; padding:10px 14px}
+.res .v{font:700 20px var(--mono); color:var(--flow)}
+.res .k{font-size:12px; color:var(--muted)}
+.chips{display:flex; flex-wrap:wrap; gap:6px; margin-top:18px}
+.chips span{font:12px var(--mono); padding:3px 8px; border:1px solid var(--line); border-radius:6px; background:var(--surface)}
+.viz{padding:0; overflow:hidden}
+.viz-head{display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap; padding:10px 14px; border-bottom:1px solid var(--line); font:11px var(--mono); color:var(--muted); text-transform:uppercase; letter-spacing:.06em}
+.viz-body{overflow-x:auto}
+.viz svg{display:block; width:100%; min-width:480px; height:auto}
+.viz svg text{font-family:var(--mono)}
+.ent{cursor:default}
+.ent rect.box{transition:stroke .2s, fill .2s}
+.ent.on rect.box{stroke:var(--accent); fill:var(--accent-soft)}
+.rel{transition:stroke .2s, stroke-width .2s}
+.rel.on{stroke:var(--accent); stroke-width:2.5}
+.roi{padding:16px 14px; display:grid; gap:10px; border-top:1px solid var(--line)}
+.roi .bar{display:grid; grid-template-columns:150px minmax(0,1fr) 90px; gap:10px; align-items:center; font-size:13px}
+.roi .track{height:14px; background:var(--surface-2); border-radius:4px; overflow:hidden}
+.roi .track i{display:block; height:100%; border-radius:4px; transform-origin:0 50%; transition:transform 1.2s cubic-bezier(.2,.8,.2,1)}
+.roi .num{font:500 13px var(--mono); text-align:right; font-variant-numeric:tabular-nums}
+@media (max-width:900px){ .case{grid-template-columns:1fr; gap:22px} }
+@media (max-width:460px){ .roi .bar{grid-template-columns:1fr; gap:4px} .roi .num{text-align:left} }
+
+/* api console */
+.console{display:grid; grid-template-columns:280px minmax(0,1fr); background:var(--console-bg); border-radius:18px; overflow:hidden; color:var(--console-fg); border:1px solid var(--console-line)}
+.eps{border-right:1px solid var(--console-line); padding:10px; display:grid; gap:4px; align-content:start}
+.eps .ttl{font:11px var(--mono); color:var(--console-dim); text-transform:uppercase; letter-spacing:.08em; padding:6px 8px 8px}
+.ep{display:flex; gap:10px; align-items:center; text-align:left; width:100%; border:1px solid transparent; background:transparent; color:var(--console-fg); padding:9px 10px; border-radius:10px; font:13px var(--mono); cursor:pointer; min-width:0}
+.ep span:last-child{overflow:hidden; text-overflow:ellipsis; white-space:nowrap; min-width:0}
+.ep:hover{background:var(--console-line)}
+.ep[aria-selected="true"]{border-color:var(--c-key); background:color-mix(in srgb, var(--c-key) 10%, transparent)}
+.mth{font:700 10px var(--mono); padding:3px 6px; border-radius:4px; min-width:44px; text-align:center; flex:0 0 auto}
+.mth.get{background:#1f3b64; color:#8cc4ff} .mth.post{background:#1e4a35; color:#8fe3bd}
+.out{min-width:0; display:flex; flex-direction:column}
+.reqline{display:flex; flex-wrap:wrap; gap:10px; align-items:center; padding:12px 16px; border-bottom:1px solid var(--console-line); font:13px var(--mono)}
+.reqline .url{flex:1 1 200px; min-width:0; overflow-wrap:anywhere; color:var(--console-fg)}
+.status{font:600 12px var(--mono); padding:3px 8px; border-radius:6px; background:#1e4a35; color:#8fe3bd}
+.status.c201{background:#3b2f63; color:#c9b8ff}
+.lat{font:12px var(--mono); color:var(--console-dim)}
+.cbtn{border:1px solid var(--console-line); background:transparent; color:var(--console-fg); border-radius:8px; padding:5px 10px; font:12px var(--mono); cursor:pointer}
+.cbtn:hover{border-color:var(--c-key)}
+pre.resp{margin:0; padding:16px; font:13px/1.65 var(--mono); white-space:pre-wrap; overflow-wrap:anywhere; min-height:330px; max-height:460px; overflow:auto}
+pre.resp .k{color:var(--c-key)} pre.resp .s{color:var(--c-str)} pre.resp .n{color:var(--c-num)} pre.resp .b{color:var(--c-bool)} pre.resp .p{color:var(--console-dim)}
+.caret{display:inline-block; width:8px; height:1.1em; vertical-align:-2px; background:var(--c-key); animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+@media (max-width:820px){ .console{grid-template-columns:1fr} .eps{border-right:0; border-bottom:1px solid var(--console-line); grid-template-columns:1fr} }
+
+
+/* sandbox */
+.sb{display:grid; grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr); gap:20px; align-items:start}
+.sb-in{background:var(--surface); border:1px solid var(--line); border-radius:18px; padding:20px; position:sticky; top:84px}
+.sb-in label{font:600 14px var(--body); display:block; margin-bottom:8px}
+.sb-in textarea{width:100%; min-height:120px; resize:vertical; border:1px solid var(--line); border-radius:12px; background:var(--bg); color:var(--ink); padding:12px 14px; font:16px/1.5 var(--body)}
+.sb-in textarea:focus{outline:2px solid var(--accent); outline-offset:1px}
+.ex{display:flex; flex-wrap:wrap; gap:6px; margin-top:12px}
+.ex button{border:1px dashed var(--line); background:transparent; color:var(--muted); border-radius:999px; padding:5px 11px; font:13px var(--body); cursor:pointer; text-align:left}
+.ex button:hover{border-color:var(--accent); color:var(--ink)}
+.sb-go{display:flex; flex-wrap:wrap; gap:10px; align-items:center; margin-top:16px}
+.sb-note{font:11px var(--mono); color:var(--muted); margin-top:14px}
+.spec{background:var(--surface); border:1px solid var(--line); border-radius:18px; overflow:hidden; min-width:0}
+.spec-head{display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px; align-items:center; padding:12px 18px; border-bottom:1px solid var(--line); font:11px var(--mono); color:var(--muted); text-transform:uppercase; letter-spacing:.06em}
+.spec-head .id{color:var(--accent); font-weight:700}
+.spec-body{padding:6px 18px 18px}
+.blk{padding:14px 0; border-bottom:1px solid var(--line); animation:blkin .45s cubic-bezier(.2,.8,.2,1) both}
+.blk:last-child{border-bottom:0}
+@keyframes blkin{from{transform:translateY(8px); opacity:0}}
+.blk h4{margin:0 0 8px; font:700 11px var(--mono); letter-spacing:.08em; text-transform:uppercase; color:var(--muted); display:flex; gap:8px; align-items:center}
+.blk h4 i{font-style:normal; color:var(--accent)}
+.blk p{margin:0}
+.blk ul, .blk ol{margin:0; padding-left:18px}
+.blk li{margin-top:5px}
+.story{font-size:17px; line-height:1.5}
+.story b{color:var(--accent); font-weight:600}
+.gwt{display:grid; gap:8px}
+.gwt div{border:1px solid var(--line); border-radius:10px; padding:10px 12px; font-size:14px; background:var(--bg)}
+.gwt span{font:700 11px var(--mono); color:var(--accent); margin-right:6px}
+.vague{display:grid; gap:6px}
+.vague div{display:grid; grid-template-columns:auto minmax(0,1fr); gap:10px; align-items:baseline; font-size:14px}
+.vague mark{background:color-mix(in srgb, var(--warn) 18%, transparent); color:var(--warn); padding:1px 6px; border-radius:4px; font:600 13px var(--mono)}
+.quote{font-style:italic; color:var(--muted)}
+.tags{display:flex; flex-wrap:wrap; gap:6px}
+.tags span{font:12px var(--mono); padding:4px 9px; border-radius:6px; background:var(--accent-soft); color:var(--accent)}
+.thinking{display:flex; gap:10px; align-items:center; font:13px var(--mono); color:var(--muted); padding:18px 0}
+.thinking i{width:8px; height:8px; border-radius:50%; background:var(--accent); animation:bounce 1s infinite}
+.thinking i:nth-child(2){animation-delay:.15s} .thinking i:nth-child(3){animation-delay:.3s}
+@keyframes bounce{50%{transform:translateY(-6px); opacity:.4}}
+@media (max-width:900px){ .sb{grid-template-columns:1fr} .sb-in{position:static} }
+
+/* matrix */
+.mx-wrap{overflow-x:auto; border:1px solid var(--line); border-radius:18px; background:var(--surface)}
+table.mx{border-collapse:collapse; width:100%; min-width:620px; font-size:14px}
+.mx th, .mx td{padding:10px 12px; border-bottom:1px solid var(--line); text-align:center}
+.mx thead th{font:600 12px var(--mono); text-transform:uppercase; letter-spacing:.04em; color:var(--muted); position:sticky; top:0; background:var(--surface)}
+.mx tbody th{text-align:left; font-weight:500; white-space:nowrap}
+.mx tr:last-child th, .mx tr:last-child td{border-bottom:0}
+.mx td .m{display:inline-block; width:14px; height:14px; border-radius:4px; background:var(--accent); transform:rotate(45deg) scale(.8); transition:transform .2s}
+.mx td .e{display:inline-block; width:6px; height:6px; border-radius:50%; background:var(--line)}
+.mx .hot{background:var(--accent-soft)}
+.mx td.hot .m{transform:rotate(45deg) scale(1.15)}
+.mx tfoot td, .mx tfoot th{font:500 12px var(--mono); color:var(--muted); border-top:1px solid var(--line); border-bottom:0}
+
+/* ai section */
+.ai{display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:14px}
+.ai .card{padding:20px}
+.ai .v{font:700 30px var(--display); color:var(--accent); margin-top:10px}
+.ai h3{font-size:17px; margin-top:12px}
+.ai p{color:var(--muted); font-size:15px; margin:8px 0 0}
+@media (max-width:820px){ .ai{grid-template-columns:1fr} }
+
+/* about + edu */
+.two{display:grid; grid-template-columns:minmax(0,1.3fr) minmax(0,1fr); gap:44px}
+.about p{margin:0 0 14px; max-width:64ch}
+.about p:first-child{font-size:19px}
+.list{list-style:none; margin:0; padding:0}
+.list li{padding-block:14px; border-bottom:1px solid var(--line)}
+.list li:last-child{border-bottom:0}
+.list .t{font-weight:600}
+.list .d{color:var(--muted); font-size:15px}
+.langs{display:grid; gap:10px; margin-top:20px}
+.lang{display:grid; grid-template-columns:110px minmax(0,1fr) 34px; gap:10px; align-items:center; font-size:14px}
+.lang .track{height:6px; background:var(--surface-2); border-radius:3px; overflow:hidden}
+.lang .track i{display:block; height:100%; background:var(--accent)}
+.lang .lv{font:500 12px var(--mono); color:var(--muted); text-align:right}
+@media (max-width:900px){ .two{grid-template-columns:1fr} }
+
+/* footer */
+footer{padding-block:80px 90px; border-top:1px solid var(--line)}
+.cta{font:700 clamp(26px, 6vw, 72px) var(--mono); letter-spacing:-.03em; line-height:1.05; overflow-wrap:anywhere}
+.cta .m{color:var(--flow)}
+.contact-grid{display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:12px; margin-top:32px}
+.contact-grid .card{padding:18px; display:grid; gap:8px; align-content:start}
+.contact-grid .card .k{font:11px var(--mono); text-transform:uppercase; letter-spacing:.08em; color:var(--muted)}
+.contact-grid .card .v{font:600 17px var(--body); overflow-wrap:anywhere}
+@media (max-width:820px){ .contact-grid{grid-template-columns:1fr} }
+.foot-note{margin-top:40px; font:12px var(--mono); color:var(--muted)}
+
+/* palette */
+.pal-back{position:fixed; inset:0; z-index:50; background:color-mix(in srgb, var(--ink) 35%, transparent); display:flex; align-items:flex-start; justify-content:center; padding:max(12vh, env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-left, 0px)) 16px}
+.pal{width:min(560px, 100%); background:var(--surface); border:1px solid var(--line); border-radius:16px; box-shadow:0 30px 80px rgba(0,0,0,.3); overflow:hidden; animation:pop .18s ease-out}
+@keyframes pop{from{transform:translateY(-8px) scale(.98); opacity:0}}
+.pal input{width:100%; border:0; border-bottom:1px solid var(--line); background:transparent; color:var(--ink); padding:16px 18px; font:16px var(--body); outline:none}
+.pal ul{list-style:none; margin:0; padding:6px; max-height:340px; overflow:auto}
+.pal li{display:flex; justify-content:space-between; gap:10px; padding:10px 12px; border-radius:10px; cursor:pointer; font-size:15px}
+.pal li span:last-child{font:11px var(--mono); color:var(--muted)}
+.pal li.on{background:var(--accent-soft); color:var(--ink)}
+.pal .hint{padding:8px 14px; border-top:1px solid var(--line); font:11px var(--mono); color:var(--muted)}
+
+.reveal{transition:transform .7s cubic-bezier(.2,.8,.2,1)}
+.reveal.pre{transform:translateY(18px)}
+</style>
+
+<div class="progress" id="progress" aria-hidden="true"></div>
+
+<div class="wrap">
+  <nav class="top" aria-label="Разделы">
+    <div class="in">
+      <div class="brand"><i aria-hidden="true"></i>Г. Гаджимагомедов · SA</div>
+      <ul>
+        <li><a href="#process">Подход</a></li>
+        <li><a href="#cases">Опыт</a></li>
+        <li><a href="#api">API</a></li>
+        <li><a href="#sandbox">Песочница</a></li>
+        <li><a href="#trace">Навыки</a></li>
+        <li><a href="#about">Обо мне</a></li>
+        <li><a href="#contact">Контакты</a></li>
+      </ul>
+      <button class="navbtn" type="button" id="theme-btn" aria-label="Сменить тему">Тема</button>
+      <button class="navbtn" type="button" id="pal-btn">Меню <kbd>Ctrl K</kbd></button>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <div class="eyebrow"><b>Системный аналитик</b> · Москва · открыт к предложениям</div>
+    <h1 id="headline"><span class="w">Бизнес</span> <span class="w" style="animation-delay:.08s">говорит.</span><br><span class="w" style="animation-delay:.22s">Разработка</span> <span class="w hl" style="animation-delay:.3s">понимает.</span></h1>
+    <div class="hero-grid">
+      <div>
+        <p class="lead">Я Герман Гаджимагомедов. Перевожу запросы бизнеса в <b>требования, схемы процессов и API-спецификации</b>, по которым команда пишет код без лишних вопросов. Больше двух лет практики в издательстве и девелопменте, плюс опыт проектирования ИИ-решений.</p>
+        <div class="actions">
+          <a class="btn primary" href="https://t.me/SA_BA_ML" target="_blank" rel="noopener">Написать в Telegram</a>
+          <a class="btn" href="#cases">Смотреть кейсы ↓</a>
+          <button class="btn copy-mail" type="button" data-toast="toast-hero">Скопировать email</button>
+        </div>
+        <div class="toast" id="toast-hero" aria-live="polite"></div>
+        <div class="facts">
+          <div><div class="v">2+ года</div><div class="k">практики аналитиком</div></div>
+          <div><div class="v">906%</div><div class="k">ROI спроектированного решения</div></div>
+          <div><div class="v">−30%</div><div class="k">критических багов на приёмке</div></div>
+        </div>
+      </div>
+
+      <figure class="card is-as" id="bpmn-card" style="margin:0">
+        <div class="bpmn-head">
+          <div class="eyebrow">Кейс «Уком СВ» · согласование планировок · BPMN 2.0</div>
+          <div class="seg" role="group" aria-label="Модель процесса">
+            <button type="button" id="b-as" aria-pressed="true">AS-IS</button>
+            <button type="button" id="b-to" aria-pressed="false">TO-BE</button>
+          </div>
+        </div>
+        <div class="bpmn-wrap"><svg id="bpmn" viewBox="0 0 690 340" role="img" aria-label="Схема процесса согласования планировок"></svg></div>
+        <div class="bpmn-foot">
+          <div><div class="v st" id="f-an">3–7 дн</div><div class="k">анализ секции</div></div>
+          <div><div class="v st" id="f-cy">18–22 дн</div><div class="k">полный цикл</div></div>
+          <div><div class="v" id="f-lb">100%</div><div class="k">трудоёмкость техспециалиста</div></div>
+        </div>
+      </figure>
+    </div>
+  </header>
+</div>
+
+<div class="ticker" aria-hidden="true"><div class="row" id="ticker"></div></div>
+
+<div class="wrap">
+  <section id="numbers" aria-labelledby="h-num">
+    <div class="sec-head">
+      <div><div class="eyebrow"><b>Раздел 1</b> · Результаты</div><h2 id="h-num">Цифры, а не обещания</h2></div>
+      <p>Каждый проект я доводил до измеримого эффекта. Вот что получилось на двух местах практики.</p>
+    </div>
+    <div class="metrics">
+      <div class="metric"><div class="v a" data-count="3">3</div><div class="k">критических расхождения в требованиях найдены до разработки</div><div class="c">Целлюлоза.ру</div></div>
+      <div class="metric"><div class="v g" data-count="20" data-pre="−" data-suf="%">−20%</div><div class="k">время выхода новой книги на платформу</div><div class="c">Целлюлоза.ру</div></div>
+      <div class="metric"><div class="v g" data-count="30" data-pre="−" data-suf="%">−30%</div><div class="k">критических багов на приёмочном тестировании</div><div class="c">Целлюлоза.ру</div></div>
+      <div class="metric"><div class="v a">0</div><div class="k">доработок модуля рекомендаций после вывода в продакшен</div><div class="c">Целлюлоза.ру</div></div>
+      <div class="metric"><div class="v g" data-count="1000" data-pre="×700–">×700–1000</div><div class="k">ускорение анализа планировки</div><div class="c">Уком СВ</div></div>
+      <div class="metric"><div class="v a" data-count="906" data-suf="%">906%</div><div class="k">ROI, окупаемость 4 месяца</div><div class="c">Уком СВ</div></div>
+      <div class="metric"><div class="v g" data-count="70" data-pre="−" data-suf="%">−70%</div><div class="k">трудоёмкость нормоконтроля для техспециалиста</div><div class="c">Уком СВ</div></div>
+      <div class="metric"><div class="v a" data-count="90" data-pre="+" data-suf="%">+90%</div><div class="k">прогноз роста ROE: с 2,78% до 5,29%</div><div class="c">Уком СВ</div></div>
+    </div>
+  </section>
+
+  <section id="process" aria-labelledby="h-proc">
+    <div class="sec-head">
+      <div><div class="eyebrow"><b>Раздел 2</b> · Подход</div><h2 id="h-proc">Как я веду задачу</h2></div>
+      <p>Шесть этапов от разговора с заказчиком до приёмки. Нажмите на этап, чтобы увидеть, что я делаю и какой артефакт получается на выходе.</p>
+    </div>
+    <div class="pipe" role="tablist" aria-label="Этапы работы" id="pipe"></div>
+    <div class="stage" id="stage" role="tabpanel" aria-live="polite"></div>
+  </section>
+
+  <section id="cases" aria-labelledby="h-cases">
+    <div class="sec-head">
+      <div><div class="eyebrow"><b>Раздел 3</b> · Опыт</div><h2 id="h-cases">Кейсы</h2></div>
+      <p>Две практики и собственный проект. Справа у каждого кейса — артефакт, который я делал: модель данных, экономика, архитектура.</p>
+    </div>
+
+    <article class="case">
+      <div>
+        <div class="meta"><span class="pill">Электронное издательство</span><span class="eyebrow">02.2024 — 06.2025 · 1 год 5 мес.</span></div>
+        <h3>Целлюлоза.ру</h3>
+        <div class="role">Бизнес-аналитик</div>
+        <ul>
+          <li>Собирал и приоритизировал требования с редакцией, производством, техотделом и партнёрами; оформлял <b>User Stories, Use Case и спецификации</b>.</li>
+          <li>Спроектировал <b>ER-модель</b> платформы: авторы, книги, главы, подписки, транзакции.</li>
+          <li>Написал <b>спецификацию REST API</b> модуля контента и интеграций (конвертер в EPUB/PDF), согласовал контракты с бэкендом.</li>
+          <li>Описал архитектуру в <b>UML</b> (классы, последовательности, компоненты) и бизнес-логику в BPMN 2.0.</li>
+          <li>Писал ТЗ, декомпозировал эпики, вёл бэклог в Jira, проводил приёмочное тестирование.</li>
+          <li>Агрегировал данные из SQL и обрабатывал в pandas для приоритизации функций.</li>
+        </ul>
+        <div class="res">
+          <div><div class="v">−20%</div><div class="k">время выхода книги</div></div>
+          <div><div class="v">−30%</div><div class="k">критических багов</div></div>
+          <div><div class="v">3</div><div class="k">расхождения до разработки</div></div>
+        </div>
+        <div class="chips"><span>BPMN 2.0</span><span>UML</span><span>ER</span><span>REST API</span><span>SQL</span><span>Jira</span><span>Scrum</span></div>
+      </div>
+      <div class="card viz">
+        <div class="viz-head"><span>ER-модель · упрощённо</span><span>наведите на сущность</span></div>
+        <div class="viz-body"><svg id="er" viewBox="0 0 560 330" role="img" aria-label="ER-диаграмма платформы электронного издательства"></svg></div>
+      </div>
+    </article>
+
+    <article class="case">
+      <div>
+        <div class="meta"><span class="pill">Девелопмент</span><span class="pill g">ИИ-решение</span><span class="eyebrow">02.2026 — 06.2026 · ВКР</span></div>
+        <h3>Уком СВ</h3>
+        <div class="role">Системный аналитик</div>
+        <ul>
+          <li>Нашёл системную проблему: ручной нормоконтроль в AutoCAD — <b>3–7 рабочих дней</b> на секцию, управленческие расходы +328% при выручке +9,1%.</li>
+          <li>Провёл интервью и анкетирование трёх групп стейкхолдеров, сформулировал функциональные, нефункциональные и правовые требования.</li>
+          <li>Построил AS-IS в BPMN 2.0, диаграмму Исикавы и SWOT; спроектировал TO-BE (схема в шапке сайта).</li>
+          <li>Спроектировал решение на <b>GigaChat 2 Pro</b> из 5 модулей: DXF → PNG, нормоконтроль по СП 54, индекс эргономики, рекомендации, PDF-протокол.</li>
+          <li>Разработал индекс эргономики IE (0–100) по 6 критериям, веса методом Саати, <b>CR = 0,07</b>.</li>
+          <li>План внедрения: 9 этапов, 60 рабочих дней; правовое обеспечение по ФЗ-152 и ПО из реестра Минцифры.</li>
+        </ul>
+        <div class="chips"><span>BPMN 2.0</span><span>Требования</span><span>Исикава</span><span>SWOT</span><span>AHP Саати</span><span>ROI</span><span>Гант</span><span>LLM</span></div>
+      </div>
+      <div class="card viz">
+        <div class="viz-head"><span>Экономическое обоснование</span><span>тыс. ₽</span></div>
+        <div class="roi" id="roi">
+          <div class="bar"><span>Капвложения</span><span class="track"><i style="background:var(--warn); transform:scaleX(.11)"></i></span><span class="num">208,5</span></div>
+          <div class="bar"><span>Эффект в год</span><span class="track"><i style="background:var(--flow); transform:scaleX(1)"></i></span><span class="num">1 888,6</span></div>
+          <div class="bar"><span>ROE до → после</span><span class="track"><i style="background:var(--accent); transform:scaleX(.53)"></i></span><span class="num">2,78 → 5,29%</span></div>
+        </div>
+        <div class="bpmn-foot" style="border-top:1px solid var(--line)">
+          <div><div class="v" style="color:var(--flow)">906%</div><div class="k">ROI</div></div>
+          <div><div class="v">4 мес</div><div class="k">окупаемость</div></div>
+          <div><div class="v">&gt;300%</div><div class="k">ROI в худшем сценарии</div></div>
+        </div>
+      </div>
+    </article>
+
+    <article class="case">
+      <div>
+        <div class="meta"><span class="pill">Собственный продукт</span><span class="eyebrow">09.2026 — 10.2026</span></div>
+        <h3>NEONFLOW</h3>
+        <div class="role">Product owner · системный архитектор</div>
+        <p>Платформа командной работы по образцу Jira + Confluence: от постановки задачи до обсуждения и созвона.</p>
+        <ul>
+          <li>Подготовил ТЗ: доска задач, аналитика выполнения, база знаний, мессенджер с медиафайлами, видеозвонки.</li>
+          <li>Спроектировал <b>ролевую модель доступа</b>: код комнаты, персональный код роли, заявки с подтверждением владельцем.</li>
+          <li>Разбил систему на модули, определил модель данных и взаимодействие модулей; архитектура без собственного сервера.</li>
+          <li>Руководил разработкой, принимал функционал, опубликовал проект на GitHub.</li>
+        </ul>
+        <div class="chips"><span>ТЗ</span><span>Архитектура</span><span>Ролевая модель</span><span>UML</span><span>Git</span></div>
+      </div>
+      <div class="card viz">
+        <div class="viz-head"><span>Архитектура модулей</span><a href="https://github.com/HPAINH/neonflow" target="_blank" rel="noopener" style="text-transform:none">GitHub →</a></div>
+        <div class="viz-body"><svg id="arch" viewBox="0 0 560 300" role="img" aria-label="Схема модулей платформы NEONFLOW"></svg></div>
+      </div>
+    </article>
+  </section>
+
+  <section id="api" aria-labelledby="h-api">
+    <div class="sec-head">
+      <div><div class="eyebrow"><b>Раздел 4</b> · Интерактив</div><h2 id="h-api">API кандидата</h2></div>
+      <p>Я пишу спецификации API, поэтому резюме тоже можно запросить как API. Выберите метод — ответ появится в консоли.</p>
+    </div>
+    <div class="console">
+      <div class="eps" role="tablist" aria-label="Методы API" id="eps"><div class="ttl">candidate-api · v1</div></div>
+      <div class="out">
+        <div class="reqline">
+          <span class="mth get" id="r-m">GET</span>
+          <span class="url" id="r-url">/v1/candidate</span>
+          <span class="status" id="r-st">200 OK</span>
+          <span class="lat" id="r-lat">42 ms</span>
+          <button class="cbtn" type="button" id="r-curl">Скопировать curl</button>
+        </div>
+        <pre class="resp" id="resp" aria-live="polite"></pre>
+      </div>
+    </div>
+  </section>
+
+  <section id="sandbox" aria-labelledby="h-sb">
+    <div class="sec-head">
+      <div><div class="eyebrow"><b>Раздел 5</b> · Песочница</div><h2 id="h-sb">Дайте мне задачу</h2></div>
+      <p>Напишите просьбу так, как её обычно формулирует бизнес — размыто и одной фразой. Я покажу, как превращаю её в требования, по которым можно работать.</p>
+    </div>
+    <div class="sb">
+      <form class="sb-in" id="sb-form">
+        <label for="sb-in">Запрос от бизнеса</label>
+        <textarea id="sb-in" maxlength="300">Клиенты жалуются, что поддержка отвечает слишком долго. Хочу, чтобы было быстро и удобно.</textarea>
+        <div class="ex" id="sb-ex" aria-label="Примеры запросов"></div>
+        <div class="sb-go">
+          <button class="btn primary" type="submit">Разобрать запрос →</button>
+          <span class="eyebrow" id="sb-count"></span>
+        </div>
+        <div class="sb-note">Разбор работает по шаблонам прямо в браузере, без ИИ: так выглядит мой первый проход по любой задаче перед встречей с заказчиком.</div>
+      </form>
+      <div class="spec" aria-live="polite">
+        <div class="spec-head"><span><span class="id" id="sb-id">REQ-001</span> · черновик требований</span><span id="sb-dom">домен: —</span></div>
+        <div class="spec-body" id="sb-out"></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="trace" aria-labelledby="h-trace">
+    <div class="sec-head">
+      <div><div class="eyebrow"><b>Раздел 6</b> · Навыки</div><h2 id="h-trace">Матрица трассировки</h2></div>
+      <p>Как в настоящей трассировке требований: каждый навык связан с проектом, где он применялся. Наведите на ячейку.</p>
+    </div>
+    <div class="mx-wrap"><table class="mx" id="mx"></table></div>
+  </section>
+
+  <section id="ai" aria-labelledby="h-ai">
+    <div class="sec-head">
+      <div><div class="eyebrow"><b>Раздел 7</b> · Отличие</div><h2 id="h-ai">Понимаю ИИ изнутри</h2></div>
+      <p>Я сам обучал модели. Поэтому пишу требования к ML- и LLM-системам на одном языке с ML-командой и понимаю, что модель реально может.</p>
+    </div>
+    <div class="ai">
+      <div class="card"><span class="pill">Computer Vision</span><div class="v">Dice 0,906</div><h3>Сегментация МРТ с вниманием</h3><p>Attention U-Net против 3D U-Net, итоговая работа «Цифровой кафедры» РТУ МИРЭА.</p></div>
+      <div class="card"><span class="pill">Speech</span><div class="v">2 модели</div><h3>VoiceClone</h3><p>Клонирование голоса на XTTS-v2 и Chatterbox с оценкой качества и водяным знаком.</p></div>
+      <div class="card"><span class="pill">Generative</span><div class="v">6,5 млн</div><h3>Диффузионная модель</h3><p>Условный UNet с нуля для генерации рукописного текста, DDIM и classifier-free guidance.</p></div>
+    </div>
+    <p style="margin-top:18px"><a href="https://hpainh.github.io/portfolio_data_science/" target="_blank" rel="noopener">Подробнее в портфолио Data Science →</a></p>
+  </section>
+
+  <section id="about" aria-labelledby="h-about">
+    <div class="sec-head">
+      <div><div class="eyebrow"><b>Раздел 8</b> · Обо мне</div><h2 id="h-about">Коротко</h2></div>
+    </div>
+    <div class="two">
+      <div class="about">
+        <p>Начинающий системный аналитик с более чем двумя годами практики в реальных бизнес-проектах. Прошёл полный цикл: интервью со стейкхолдерами, требования, моделирование процессов и данных, архитектура, постановка задач и экономическое обоснование.</p>
+        <p>Работаю с BPMN 2.0, UML, ER-диаграммами, REST API, JSON, Swagger / OpenAPI и Postman, SQL (PostgreSQL), Python (pandas), Jira и Confluence, Draw.io, PlantUML и MS Visio. Работал по Scrum: бэклог, daily, ретроспективы.</p>
+        <p>Легко нахожу общий язык с бизнесом, разработчиками и архитекторами, задаю уточняющие вопросы и аргументирую решения цифрами. Быстро вникаю в новую предметную область.</p>
+        <p>Вне работы — футбол, волейбол, баскетбол, шахматы и профессиональная литература по аналитике и ML.</p>
+      </div>
+      <div>
+        <ul class="list">
+          <li><div class="t">НИТУ «МИСИС» · магистратура · 2028</div><div class="d">Прикладная информатика, «Искусственный интеллект и машинное обучение»</div></li>
+          <li><div class="t">РТУ МИРЭА · бакалавриат · 2026</div><div class="d">Бизнес-информатика, «Архитектура предприятия». Диплом с отличием</div></li>
+          <li><div class="t">РТУ МИРЭА · «Цифровая кафедра» · 2025</div><div class="d">Разработка и тестирование сервисов искусственного интеллекта</div></li>
+        </ul>
+        <div class="langs">
+          <div class="lang"><span>Русский</span><span class="track"><i style="width:100%"></i></span><span class="lv">C2</span></div>
+          <div class="lang"><span>Английский</span><span class="track"><i style="width:66%"></i></span><span class="lv">B2</span></div>
+          <div class="lang"><span>Японский</span><span class="track"><i style="width:33%"></i></span><span class="lv">A2</span></div>
+          <div class="lang"><span>Арабский</span><span class="track"><i style="width:17%"></i></span><span class="lv">A1</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer id="contact">
+    <div class="eyebrow"><b>Раздел 9</b> · Контакты</div>
+    <div class="cta" style="margin-top:16px"><span class="m">POST</span> /v1/interview</div>
+    <p style="color:var(--muted); max-width:56ch; margin-top:16px">Ищу стажировку или позицию junior системного или бизнес-аналитика. Быстрее всего отвечаю в Telegram.</p>
+    <div class="contact-grid">
+      <a class="card" href="https://t.me/SA_BA_ML" target="_blank" rel="noopener" style="text-decoration:none; color:inherit"><span class="k">Telegram</span><span class="v">@SA_BA_ML</span></a>
+      <div class="card"><span class="k">Email</span><span class="v" id="mail-text">german.gadjimagomedov@yandex.ru</span><button class="btn copy-mail" type="button" data-toast="toast-foot" style="justify-self:start; padding:7px 12px; font-size:13px">Скопировать</button><span class="toast" id="toast-foot" aria-live="polite" style="margin:0"></span></div>
+      <a class="card" href="https://github.com/HPAINH" target="_blank" rel="noopener" style="text-decoration:none; color:inherit"><span class="k">GitHub</span><span class="v">HPAINH</span></a>
+    </div>
+    <div class="foot-note">Нажмите Ctrl K, чтобы быстро перейти к разделу.</div>
+  </footer>
+</div>
+
+<div class="pal-back" id="pal" hidden>
+  <div class="pal" role="dialog" aria-modal="true" aria-label="Быстрое меню">
+    <input id="pal-in" type="text" placeholder="Куда перейти или что сделать…" autocomplete="off" aria-label="Поиск команды">
+    <ul id="pal-list" role="listbox"></ul>
+    <div class="hint">↑↓ выбрать · Enter выполнить · Esc закрыть</div>
+  </div>
+</div>
+
+<script>
+(function(){
+  var MAIL='german.gadjimagomedov@yandex.ru';
+  var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var NS='http://www.w3.org/2000/svg';
+  function $(id){ return document.getElementById(id); }
+  function el(n,a,t){ var e=document.createElementNS(NS,n); for(var k in a) e.setAttribute(k,a[k]); if(t!=null) e.textContent=t; return e; }
+  function onVisible(node, fn, th){
+    if(!('IntersectionObserver' in window)){ fn(); return; }
+    var io=new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting){ io.disconnect(); fn(); } }); }, {threshold:th||.3});
+    io.observe(node);
+  }
+
+  /* theme */
+  function setTheme(t){ document.documentElement.setAttribute('data-theme', t); try{ localStorage.setItem('sa-theme', t); }catch(e){} }
+  try{ var saved=localStorage.getItem('sa-theme'); if(saved) document.documentElement.setAttribute('data-theme', saved); }catch(e){}
+  function curTheme(){ var a=document.documentElement.getAttribute('data-theme'); if(a) return a; return (window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light'; }
+  function toggleTheme(){ setTheme(curTheme()==='dark'?'light':'dark'); }
+  $('theme-btn').addEventListener('click', toggleTheme);
+
+  /* copy email */
+  function copyMail(toastId){
+    var t=$(toastId);
+    function done(m){ if(t){ t.textContent=m; setTimeout(function(){ t.textContent=''; }, 2600); } }
+    try{ navigator.clipboard.writeText(MAIL).then(function(){ done('Скопировано: '+MAIL); }, function(){ done(MAIL); }); }catch(e){ done(MAIL); }
+  }
+  document.querySelectorAll('.copy-mail').forEach(function(b){ b.addEventListener('click', function(){ copyMail(b.getAttribute('data-toast')); }); });
+
+  /* progress + active nav */
+  var prog=$('progress'), links=[].slice.call(document.querySelectorAll('nav.top ul a'));
+  function onScroll(){
+    var h=document.documentElement, max=h.scrollHeight-h.clientHeight;
+    prog.style.transform='scaleX('+(max>0?h.scrollTop/max:0)+')';
+    var cur=null;
+    links.forEach(function(a){ var s=document.querySelector(a.getAttribute('href')); if(s && s.getBoundingClientRect().top<140) cur=a; });
+    links.forEach(function(a){ a.classList.toggle('on', a===cur); });
+  }
+  window.addEventListener('scroll', onScroll, {passive:true}); onScroll();
+
+  /* ticker */
+  var tk=['Системный анализ','BPMN 2.0','UML','ER-диаграммы','REST API','Swagger / OpenAPI','Postman','JSON','SQL','PostgreSQL','User Stories','Use Case','ФТ и НФТ','Трассировка требований','Jira','Confluence','Scrum','Draw.io','PlantUML','Python','LLM-решения'];
+  var row=$('ticker'); tk.concat(tk).forEach(function(s){ var sp=document.createElement('span'); sp.textContent=s; row.appendChild(sp); });
+
+  /* ---------- BPMN ---------- */
+  var svg=$('bpmn');
+  var defs=el('defs',{});
+  var mk=el('marker',{id:'arr',viewBox:'0 0 10 10',refX:'9',refY:'5',markerWidth:'7',markerHeight:'7',orient:'auto-start-reverse'});
+  mk.appendChild(el('path',{d:'M0 0L10 5L0 10z',fill:'var(--muted)'})); defs.appendChild(mk); svg.appendChild(defs);
+  var lanes=[['Застройщик',20],['Тех. специалист',120],['Главный инженер',220]];
+  svg.appendChild(el('rect',{x:20,y:20,width:660,height:300,rx:6,fill:'none',stroke:'var(--line)','stroke-width':1.5}));
+  lanes.forEach(function(l,i){
+    if(i>0) svg.appendChild(el('line',{x1:44,y1:l[1],x2:680,y2:l[1],stroke:'var(--line)','stroke-width':1.5}));
+    var t=el('text',{x:0,y:0,transform:'translate(36 '+(l[1]+50)+') rotate(-90)','text-anchor':'middle','font-size':10.5,fill:'var(--muted)'},l[0]);
+    svg.appendChild(t);
+  });
+  svg.appendChild(el('line',{x1:44,y1:20,x2:44,y2:320,stroke:'var(--line)','stroke-width':1.5}));
+  var edges=[
+    [[112,70],[130,70]],
+    [[250,70],[270,70],[270,170],[290,170]],
+    [[420,170],[452,170]],
+    [[470,152],[470,92]],
+    [[410,70],[355,70],[355,148]],
+    [[488,170],[560,170],[560,248]],
+    [[620,270],[643,270]]
+  ];
+  var edgeEls=edges.map(function(p,i){
+    var e=el('polyline',{points:p.map(function(q){return q.join(',');}).join(' '),fill:'none',stroke:'var(--muted)','stroke-width':1.6,'marker-end':'url(#arr)'});
+    if(i===4) e.setAttribute('stroke-dasharray','5 4');
+    svg.appendChild(e); return e;
+  });
+  svg.appendChild(el('text',{x:478,y:128,'font-size':11,fill:'var(--muted)'},'да'));
+  svg.appendChild(el('text',{x:500,y:162,'font-size':11,fill:'var(--muted)'},'нет'));
+  var nodes={};
+  function task(id,x,y,w,h){
+    var g=el('g',{});
+    var r=el('rect',{x:x,y:y,width:w,height:h,rx:10,fill:'var(--surface)',stroke:'var(--ink)','stroke-width':1.6});
+    var t=el('text',{x:x+w/2,y:y+h/2,'text-anchor':'middle','font-size':10,fill:'var(--ink)'});
+    g.appendChild(r); g.appendChild(t); svg.appendChild(g);
+    nodes[id]={g:g,r:r,t:t,x:x,y:y,w:w,h:h,cx:x+w/2,cy:y+h/2};
+  }
+  task('T1',130,48,120,44); task('T2',290,146,130,48); task('T3',410,48,120,44); task('T4',500,246,120,48);
+  var S=el('circle',{cx:100,cy:70,r:12,fill:'var(--surface)',stroke:'var(--ink)','stroke-width':1.6}); svg.appendChild(S);
+  var E=el('circle',{cx:655,cy:270,r:12,fill:'var(--surface)',stroke:'var(--ink)','stroke-width':3.5}); svg.appendChild(E);
+  var G=el('path',{d:'M470 152 L488 170 L470 188 L452 170 Z',fill:'var(--surface)',stroke:'var(--ink)','stroke-width':1.6}); svg.appendChild(G);
+  svg.appendChild(el('text',{x:470,y:174,'text-anchor':'middle','font-size':12,'font-weight':700,fill:'var(--ink)'},'×'));
+  svg.appendChild(el('text',{x:470,y:206,'text-anchor':'middle','font-size':10,fill:'var(--muted)'},'замечания?'));
+  var badge=el('g',{}); var bR=el('rect',{x:372,y:132,width:60,height:20,rx:10}); var bT=el('text',{x:402,y:146,'text-anchor':'middle','font-size':10.5,'font-weight':700,fill:'#fff'});
+  badge.appendChild(bR); badge.appendChild(bT); svg.appendChild(badge);
+  var token=el('circle',{r:7,cx:100,cy:70,fill:'var(--accent)'}); var halo=el('circle',{r:14,cx:100,cy:70,fill:'var(--accent)',opacity:.18});
+  svg.appendChild(halo); svg.appendChild(token);
+
+  var STATES={
+    as:{T1:['Передать','планировки'],T2:['Ручной','нормоконтроль в AutoCAD'],T3:['Доработка','планировок'],T4:['Согласование','решения'],badge:'3–7 дн',bc:'var(--warn)',an:'3–7 дн',cy:'18–22 дн',lb:'100%',
+      route:[[100,70],[112,70],[130,70],[190,70,.3],[250,70],[270,70],[270,170],[290,170],[355,170,1.6],[420,170],[452,170],[470,170,.2],[470,152],[470,92],[470,70,.7],[410,70],[355,70],[355,148],[355,170,1.6],[420,170],[452,170],[470,170,.2],[488,170],[560,170],[560,248],[560,270,.6],[620,270],[643,270],[655,270,.9]]},
+    to:{T1:['Загрузить','DXF-файл'],T2:['ИИ-нормоконтроль','по СП 54'],T3:['Доработка','планировок'],T4:['Проверка','PDF-протокола'],badge:'3–7 мин',bc:'var(--flow)',an:'3–7 мин',cy:'2–4 дн',lb:'−70%',
+      route:[[100,70],[112,70],[130,70],[190,70,.3],[250,70],[270,70],[270,170],[290,170],[355,170,.35],[420,170],[452,170],[470,170,.2],[488,170],[560,170],[560,248],[560,270,.6],[620,270],[643,270],[655,270,.9]]}
+  };
+  function setLines(t,lines){
+    while(t.firstChild) t.removeChild(t.firstChild);
+    lines.forEach(function(s,i){ var ts=el('tspan',{x:t.getAttribute('x'),dy:i===0?(lines.length>1?'-0.35em':'0.35em'):'1.2em'},s); t.appendChild(ts); });
+  }
+  var state='as', card=$('bpmn-card');
+  function applyState(s){
+    state=s; var d=STATES[s];
+    ['T1','T2','T3','T4'].forEach(function(k){ setLines(nodes[k].t, d[k]); });
+    bR.setAttribute('fill', d.bc); bT.textContent=d.badge;
+    nodes.T2.r.setAttribute('stroke', d.bc); nodes.T2.r.setAttribute('stroke-width', 2.4);
+    edgeEls[3].setAttribute('opacity', s==='as'?1:.35); edgeEls[4].setAttribute('opacity', s==='as'?1:.35);
+    $('f-an').textContent=d.an; $('f-cy').textContent=d.cy; $('f-lb').textContent=d.lb;
+    card.classList.toggle('is-as', s==='as'); card.classList.toggle('is-to', s==='to');
+    $('b-as').setAttribute('aria-pressed', String(s==='as')); $('b-to').setAttribute('aria-pressed', String(s==='to'));
+    token.setAttribute('fill', s==='as'?'var(--warn)':'var(--flow)'); halo.setAttribute('fill', s==='as'?'var(--warn)':'var(--flow)');
+    startRun();
+  }
+  $('b-as').addEventListener('click', function(){ applyState('as'); });
+  $('b-to').addEventListener('click', function(){ applyState('to'); });
+
+  function nodeAt(x,y){ for(var k in nodes){ var n=nodes[k]; if(Math.abs(n.cx-x)<2 && Math.abs(n.cy-y)<2) return n; } return null; }
+  var run=null;
+  function startRun(){
+    var route=STATES[state].route; var myRun={}; run=myRun;
+    for(var k in nodes) nodes[k].r.setAttribute('fill','var(--surface)');
+    if(reduce){ token.setAttribute('cx',655); token.setAttribute('cy',270); halo.setAttribute('cx',655); halo.setAttribute('cy',270); return; }
+    var i=0, last=null, speed=230, pauseLeft=0, pos=[route[0][0],route[0][1]];
+    function frame(now){
+      if(run!==myRun) return;
+      if(last===null) last=now; var dt=Math.min(.05,(now-last)/1000); last=now;
+      if(pauseLeft>0){ pauseLeft-=dt; }
+      else {
+        var nxt=route[i+1];
+        if(!nxt){ setTimeout(function(){ if(run===myRun) startRun(); }, 600); return; }
+        var dx=nxt[0]-pos[0], dy=nxt[1]-pos[1], dist=Math.hypot(dx,dy), step=speed*dt;
+        if(step>=dist){
+          pos=[nxt[0],nxt[1]]; i++;
+          for(var k in nodes) nodes[k].r.setAttribute('fill','var(--surface)');
+          if(nxt[2]){ pauseLeft=nxt[2]; var n=nodeAt(nxt[0],nxt[1]); if(n) n.r.setAttribute('fill','var(--accent-soft)'); }
+        } else { pos=[pos[0]+dx/dist*step, pos[1]+dy/dist*step]; }
+      }
+      token.setAttribute('cx',pos[0]); token.setAttribute('cy',pos[1]); halo.setAttribute('cx',pos[0]); halo.setAttribute('cy',pos[1]);
+      halo.setAttribute('r', 12+3*Math.sin(now/180));
+      requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
+  }
+  applyState('as');
+
+  /* ---------- counters ---------- */
+  document.querySelectorAll('[data-count]').forEach(function(n){
+    var to=+n.getAttribute('data-count'), pre=n.getAttribute('data-pre')||'', suf=n.getAttribute('data-suf')||'';
+    if(reduce) return;
+    onVisible(n, function(){
+      var t0=null;
+      requestAnimationFrame(function st(now){
+        if(t0===null) t0=now; var k=Math.min(1,(now-t0)/1300), e=1-Math.pow(1-k,3);
+        n.textContent=pre+Math.round(to*e)+suf;
+        if(k<1) requestAnimationFrame(st);
+      });
+    }, .6);
+  });
+
+  /* ---------- pipeline ---------- */
+  var STEPS=[
+    {t:'Выявление', h:'Выявляю реальную проблему', li:['Интервью и анкетирование стейкхолдеров','Анализ документации и текущих процессов','Диаграмма Исикавы и SWOT для поиска корневой причины'], w:'Уком СВ: интервью трёх групп стейкхолдеров',
+     a:'<span class="tag">протокол интервью · пример</span><span class="d"># Техспециалист, Уком СВ</span>\n<span class="k">Вопрос:</span> сколько времени уходит на проверку секции?\n<span class="k">Ответ:</span> <span class="s">"3–7 рабочих дней, всё вручную в AutoCAD"</span>\n<span class="k">Вывод:</span> узкое место — ручной нормоконтроль\n<span class="k">Метрика:</span> управленческие расходы <span class="n">+328%</span> при выручке <span class="n">+9,1%</span>'},
+    {t:'Требования', h:'Формализую требования', li:['User Stories и сценарии использования (Use Case)','Функциональные и нефункциональные требования','Трассировка требований до задач и тестов'], w:'Целлюлоза.ру: управление требованиями с трассировкой',
+     a:'<span class="tag">user story · пример</span><span class="k">US-14</span>  Как <span class="s">редактор</span>, я хочу загрузить\nрукопись и получить EPUB и PDF,\nчтобы <span class="s">не готовить форматы вручную</span>.\n\n<span class="k">Критерии приёмки:</span>\n  <span class="d">—</span> поддерживаются DOCX и TXT\n  <span class="d">—</span> метаданные заполняются автоматически\n<span class="k">НФТ:</span> конвертация ≤ <span class="n">60</span> с на книгу'},
+    {t:'Моделирование', h:'Рисую процессы и архитектуру', li:['BPMN 2.0: AS-IS и TO-BE с подпроцессами','UML: классы, последовательности, компоненты','Находим расхождения до того, как написан код'], w:'Целлюлоза.ру: 3 критических расхождения найдены до разработки',
+     a:'<span class="tag">bpmn · фрагмент</span><span class="d">&lt;!-- TO-BE, Уком СВ --&gt;</span>\n&lt;<span class="k">bpmn:serviceTask</span> id=<span class="s">"ai_check"</span>\n   name=<span class="s">"ИИ-нормоконтроль по СП 54"</span>/&gt;\n&lt;<span class="k">bpmn:exclusiveGateway</span> id=<span class="s">"has_remarks"</span>/&gt;\n&lt;<span class="k">bpmn:sequenceFlow</span> sourceRef=<span class="s">"ai_check"</span>\n   targetRef=<span class="s">"has_remarks"</span>/&gt;'},
+    {t:'Данные и API', h:'Проектирую данные и интеграции', li:['ER-модель сущностей и связей','Спецификация REST API: эндпоинты, форматы, коды ошибок','Согласование контрактов с бэкенд-разработчиками'], w:'Целлюлоза.ру: ER-модель и API модуля контента',
+     a:'<span class="tag">openapi · фрагмент</span><span class="k">GET</span> /api/v1/books/<span class="s">{bookId}</span>/chapters\n<span class="k">200</span>:\n  [{ <span class="k">"id"</span>: <span class="n">12</span>, <span class="k">"title"</span>: <span class="s">"Глава 1"</span>,\n     <span class="k">"status"</span>: <span class="s">"published"</span> }]\n<span class="k">404</span>: { <span class="k">"code"</span>: <span class="s">"BOOK_NOT_FOUND"</span> }'},
+    {t:'Постановка', h:'Ставлю задачи команде', li:['Технические задания','Декомпозиция эпиков на задачи','Бэклог в Jira, daily и ретроспективы'], w:'Целлюлоза.ру: ТЗ и бэклог в Jira',
+     a:'<span class="tag">jira · пример</span><span class="k">EPIC</span> Загрузка книги на платформу\n  <span class="d">├─</span> Форма загрузки рукописи\n  <span class="d">├─</span> Автозаполнение метаданных\n  <span class="d">├─</span> Конвертер в EPUB / PDF\n  <span class="d">├─</span> Предпросмотр главы\n  <span class="d">└─</span> Публикация и уведомления\n<span class="k">Итог:</span> выход книги <span class="n">−20%</span> по времени'},
+    {t:'Приёмка и эффект', h:'Принимаю и считаю эффект', li:['Чек-листы и сценарии приёмочного тестирования','Заведение и сопровождение багов','Экономическое обоснование: ROI, окупаемость, ROE'], w:'Уком СВ: ROI 906%, окупаемость 4 месяца',
+     a:'<span class="tag">экономика · Уком СВ</span><span class="k">Капвложения</span>      <span class="n">208 500</span> ₽\n<span class="k">Эффект в год</span>     <span class="n">1 888 600</span> ₽\n<span class="k">ROI</span>              <span class="n">906%</span>\n<span class="k">Окупаемость</span>      <span class="n">4</span> мес\n<span class="k">ROE</span>              <span class="n">2,78%</span> → <span class="n">5,29%</span>\n<span class="d">ROI &gt; 300% даже в пессимистичном сценарии</span>'}
+  ];
+  var pipe=$('pipe'), stage=$('stage'), stepBtns=[];
+  STEPS.forEach(function(s,i){
+    var b=document.createElement('button'); b.type='button'; b.setAttribute('role','tab'); b.id='st-'+i;
+    b.innerHTML='<span class="n">0'+(i+1)+'</span><b>'+s.t+'</b>';
+    b.addEventListener('click', function(){ showStep(i, true); });
+    pipe.appendChild(b); stepBtns.push(b);
+  });
+  var autoStep=true, stepIdx=0;
+  function showStep(i, user){
+    if(user) autoStep=false;
+    stepIdx=i; var s=STEPS[i];
+    stepBtns.forEach(function(b,j){ b.setAttribute('aria-selected', String(j===i)); });
+    stage.innerHTML='<div><div class="eyebrow">Этап '+(i+1)+' из 6</div><h3 style="margin-top:8px">'+s.h+'</h3><ul>'+s.li.map(function(x){return '<li>'+x+'</li>';}).join('')+'</ul><div class="where">→ '+s.w+'</div></div><div class="artifact">'+s.a+'</div>';
+  }
+  showStep(0);
+  if(!reduce){
+    onVisible(pipe, function(){
+      var iv=setInterval(function(){ if(!autoStep){ clearInterval(iv); return; } showStep((stepIdx+1)%STEPS.length); }, 4200);
+    });
+  }
+
+  /* ---------- ER diagram ---------- */
+  var er=$('er');
+  var mk2=el('marker',{id:'crow',viewBox:'0 0 12 12',refX:'11',refY:'6',markerWidth:'12',markerHeight:'12',orient:'auto'});
+  mk2.appendChild(el('path',{d:'M0 6 L11 0 M0 6 L11 6 M0 6 L11 12',stroke:'var(--muted)','stroke-width':1.4,fill:'none'}));
+  var d2=el('defs',{}); d2.appendChild(mk2); er.appendChild(d2);
+  var ENT={
+    author:{n:'Автор',x:20,y:20,f:['id PK','name','email']},
+    book:{n:'Книга',x:210,y:20,f:['id PK','author_id FK','title','status']},
+    chapter:{n:'Глава',x:400,y:20,f:['id PK','book_id FK','number','text']},
+    sub:{n:'Подписка',x:210,y:180,f:['id PK','book_id FK','reader_id','period']},
+    tx:{n:'Транзакция',x:400,y:180,f:['id PK','sub_id FK','amount','paid_at']}
+  };
+  var RELS=[['author','book',[[160,50],[210,50]]],['book','chapter',[[350,50],[400,50]]],['book','sub',[[280,130],[280,180]]],['sub','tx',[[350,210],[400,210]]]];
+  var relEls=RELS.map(function(r){ var p=el('polyline',{points:r[2].map(function(q){return q.join(',');}).join(' '),fill:'none',stroke:'var(--muted)','stroke-width':1.6,'marker-end':'url(#crow)'}); p.classList.add('rel'); er.appendChild(p); return p; });
+  Object.keys(ENT).forEach(function(k){
+    var e=ENT[k], h=34+e.f.length*20, g=el('g',{tabindex:0}); g.classList.add('ent');
+    g.appendChild(el('rect',{x:e.x,y:e.y,width:140,height:h,rx:8,fill:'var(--surface)',stroke:'var(--line)','stroke-width':1.6,'class':'box'}));
+    g.appendChild(el('rect',{x:e.x,y:e.y,width:140,height:28,rx:8,fill:'var(--accent)'}));
+    g.appendChild(el('rect',{x:e.x,y:e.y+18,width:140,height:10,fill:'var(--accent)'}));
+    g.appendChild(el('text',{x:e.x+12,y:e.y+19,'font-size':12,'font-weight':700,fill:'var(--on-accent)'},e.n));
+    e.f.forEach(function(f,i){
+      var pk=/PK|FK/.test(f);
+      g.appendChild(el('text',{x:e.x+12,y:e.y+48+i*20,'font-size':11,fill:pk?'var(--accent)':'var(--ink)'},f));
+    });
+    er.appendChild(g); e.g=g;
+    function on(v){ e.g.classList.toggle('on',v); RELS.forEach(function(r,i){ var hit=v&&(r[0]===k||r[1]===k); relEls[i].classList.toggle('on',hit); if(hit){ var o=r[0]===k?r[1]:r[0]; ENT[o].g.classList.add('on'); } else if(!v){ } }); if(!v) Object.keys(ENT).forEach(function(q){ ENT[q].g.classList.remove('on'); }); }
+    g.addEventListener('mouseenter', function(){ on(true); }); g.addEventListener('mouseleave', function(){ on(false); });
+    g.addEventListener('focus', function(){ on(true); }); g.addEventListener('blur', function(){ on(false); });
+  });
+  er.appendChild(el('text',{x:20,y:318,'font-size':10.5,fill:'var(--muted)'},'1 ── N   один ко многим'));
+
+  /* ---------- ROI bars animate ---------- */
+  var roiBars=[].slice.call(document.querySelectorAll('#roi .track i'));
+  if(!reduce){
+    var targets=roiBars.map(function(b){ return b.style.transform; });
+    roiBars.forEach(function(b){ b.style.transform='scaleX(0)'; });
+    onVisible($('roi'), function(){ roiBars.forEach(function(b,i){ setTimeout(function(){ b.style.transform=targets[i]; }, i*180); }); }, .5);
+    setTimeout(function(){ roiBars.forEach(function(b,i){ if(b.style.transform==='scaleX(0)') b.style.transform=targets[i]; }); }, 6000);
+  }
+
+  /* ---------- architecture ---------- */
+  var ar=$('arch');
+  var d3=el('defs',{}); var mk3=el('marker',{id:'arr2',viewBox:'0 0 10 10',refX:'9',refY:'5',markerWidth:'7',markerHeight:'7',orient:'auto'}); mk3.appendChild(el('path',{d:'M0 0L10 5L0 10z',fill:'var(--muted)'})); d3.appendChild(mk3); ar.appendChild(d3);
+  ar.appendChild(el('rect',{x:20,y:16,width:520,height:54,rx:12,fill:'var(--accent-soft)',stroke:'var(--accent)','stroke-width':1.6}));
+  ar.appendChild(el('text',{x:280,y:39,'text-anchor':'middle','font-size':13,'font-weight':700,fill:'var(--ink)'},'Управление доступом'));
+  ar.appendChild(el('text',{x:280,y:58,'text-anchor':'middle','font-size':11,fill:'var(--muted)'},'код комнаты · код роли · заявки с подтверждением'));
+  var MODS=['Задачи','Аналитика','База знаний','Мессенджер','Звонки'];
+  MODS.forEach(function(m,i){
+    var x=20+i*106, w=96;
+    ar.appendChild(el('line',{x1:x+w/2,y1:70,x2:x+w/2,y2:116,stroke:'var(--muted)','stroke-width':1.4,'marker-end':'url(#arr2)'}));
+    var g=el('g',{});
+    g.appendChild(el('rect',{x:x,y:118,width:w,height:60,rx:10,fill:'var(--surface)',stroke:'var(--ink)','stroke-width':1.6}));
+    g.appendChild(el('text',{x:x+w/2,y:153,'text-anchor':'middle','font-size':11.5,'font-weight':600,fill:'var(--ink)'},m));
+    ar.appendChild(g);
+    ar.appendChild(el('line',{x1:x+w/2,y1:178,x2:x+w/2,y2:222,stroke:'var(--muted)','stroke-width':1.4,'marker-end':'url(#arr2)'}));
+  });
+  ar.appendChild(el('path',{d:'M116 132 L126 132',stroke:'var(--accent)','stroke-width':2,'marker-end':'url(#arr2)'}));
+  ar.appendChild(el('text',{x:116,y:112,'font-size':9.5,fill:'var(--accent)'},'метрики задач'));
+  ar.appendChild(el('rect',{x:20,y:224,width:520,height:50,rx:12,fill:'var(--surface-2)',stroke:'var(--line)','stroke-width':1.6}));
+  ar.appendChild(el('text',{x:280,y:246,'text-anchor':'middle','font-size':13,'font-weight':700,fill:'var(--ink)'},'Модель данных'));
+  ar.appendChild(el('text',{x:280,y:264,'text-anchor':'middle','font-size':11,fill:'var(--muted)'},'без собственного сервера'));
+
+  /* ---------- API console ---------- */
+  var API=[
+    {m:'GET', u:'/v1/candidate', st:200, body:{name:'Герман Гаджимагомедов', role:'Системный аналитик', grade:'стажёр / junior', location:'Москва', experience_years:'2+', open_to_offers:true, formats:['офис','гибрид'], strengths:['требования','BPMN / UML','REST API','ИИ-решения']}},
+    {m:'GET', u:'/v1/experience', st:200, body:[{company:'Уком СВ', role:'Системный аналитик', period:'02.2026 — 06.2026', result:'анализ планировки: 3–7 дней → 3–7 минут, ROI 906%'},{company:'Целлюлоза.ру', role:'Бизнес-аналитик', period:'02.2024 — 06.2025', result:'выход книги −20%, критические баги −30%'},{project:'NEONFLOW', role:'Product owner · архитектор', period:'09.2026 — 10.2026', result:'платформа задач и базы знаний на GitHub'}]},
+    {m:'GET', u:'/v1/skills?group=analysis', st:200, body:{requirements:['сбор и анализ','User Stories','Use Case','ФТ / НФТ','трассировка'], modeling:['BPMN 2.0','UML','ER-диаграммы','IDEF0'], integration:['REST API','JSON','Swagger / OpenAPI','Postman'], data:['SQL','PostgreSQL','Python (pandas)'], tools:['Jira','Confluence','Draw.io','PlantUML','MS Visio']}},
+    {m:'GET', u:'/v1/cases/ukom/metrics', st:200, body:{analysis_time:{before:'3–7 рабочих дней',after:'3–7 минут'}, approval_cycle_days:{before:'18–22',after:'2–4'}, labor_reduction:{tech_specialist:0.7, chief_engineer:0.6}, capex_rub:208500, annual_effect_rub:1888600, roi:9.06, payback_months:4, ahp_consistency_ratio:0.07}},
+    {m:'GET', u:'/v1/education', st:200, body:[{university:'НИТУ «МИСИС»', degree:'магистратура', year:2028, program:'ИИ и машинное обучение'},{university:'РТУ МИРЭА', degree:'бакалавриат', year:2026, program:'Бизнес-информатика', honors:true}]},
+    {m:'POST', u:'/v1/interview', st:201, req:{company:'Ваша компания', position:'Системный аналитик'}, body:{status:'created', message:'Спасибо! Напишите мне — договоримся о времени.', telegram:'@SA_BA_ML', email:'german.gadjimagomedov@yandex.ru', reply_time:'в течение дня'}}
+  ];
+  var eps=$('eps'), resp=$('resp'), epBtns=[], typing=null;
+  function hl(json){
+    return json.replace(/&/g,'&amp;').replace(/</g,'&lt;')
+      .replace(/("(?:\\.|[^"\\])*")(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d+)?/g, function(m, str, colon, bool){
+        if(str) return colon ? '<span class="k">'+str+'</span>'+colon : '<span class="s">'+str+'</span>';
+        if(bool) return '<span class="b">'+m+'</span>';
+        return '<span class="n">'+m+'</span>';
+      });
+  }
+  API.forEach(function(a,i){
+    var b=document.createElement('button'); b.type='button'; b.className='ep'; b.setAttribute('role','tab');
+    b.innerHTML='<span class="mth '+a.m.toLowerCase()+'">'+a.m+'</span><span>'+a.u+'</span>';
+    b.addEventListener('click', function(){ callApi(i); });
+    eps.appendChild(b); epBtns.push(b);
+  });
+  var curApi=0;
+  function curlFor(a){ return 'curl -X '+a.m+' "https://hpainh.github.io/api'+a.u+'"'+(a.req?" -H 'Content-Type: application/json' -d '"+JSON.stringify(a.req)+"'":''); }
+  function callApi(i){
+    curApi=i; var a=API[i];
+    epBtns.forEach(function(b,j){ b.setAttribute('aria-selected', String(j===i)); });
+    $('r-m').textContent=a.m; $('r-m').className='mth '+a.m.toLowerCase(); $('r-url').textContent=a.u;
+    var st=$('r-st'); st.textContent=a.st===201?'201 Created':'200 OK'; st.className='status'+(a.st===201?' c201':'');
+    $('r-lat').textContent=(28+Math.floor(Math.random()*60))+' ms';
+    var head=a.req?'<span class="p">// request body</span>\n'+hl(JSON.stringify(a.req,null,2))+'\n\n<span class="p">// response</span>\n':'';
+    var full=JSON.stringify(a.body,null,2);
+    if(typing) clearInterval(typing);
+    if(reduce){ resp.innerHTML=head+hl(full); return; }
+    var k=0, chunk=Math.max(6, Math.round(full.length/45));
+    resp.innerHTML=head+'<span class="caret"></span>';
+    typing=setInterval(function(){
+      k=Math.min(full.length, k+chunk);
+      resp.innerHTML=head+hl(full.slice(0,k))+(k<full.length?'<span class="caret"></span>':'');
+      if(k>=full.length){ clearInterval(typing); typing=null; }
+    }, 22);
+  }
+  resp.innerHTML=hl(JSON.stringify(API[0].body,null,2));
+  epBtns[0].setAttribute('aria-selected','true');
+  onVisible(resp, function(){ callApi(0); }, .4);
+  $('r-curl').addEventListener('click', function(){
+    var c=curlFor(API[curApi]), b=$('r-curl');
+    function done(m){ b.textContent=m; setTimeout(function(){ b.textContent='Скопировать curl'; }, 1800); }
+    try{ navigator.clipboard.writeText(c).then(function(){ done('Скопировано'); }, function(){ done('Не удалось'); }); }catch(e){ done('Не удалось'); }
+  });
+
+
+  /* ---------- requirements sandbox ---------- */
+  var VAGUE=[
+    [/быстр/i,'«быстро»','Сколько это в секундах или минутах? Фиксирую целевое значение и как его измеряем.'],
+    [/удобн/i,'«удобно»','Удобно кому и в каком сценарии? Меряю числом шагов или временем выполнения задачи.'],
+    [/красив/i,'«красиво»','Есть ли дизайн-система или референсы? Кто утверждает макет?'],
+    [/прост/i,'«просто»','Для какого пользователя просто: новичка или опытного? Сколько шагов допустимо?'],
+    [/автоматич/i,'«автоматически»','Что запускает процесс? Что происходит при ошибке и кто об этом узнаёт?'],
+    [/(^|[^а-яё])(всё|все|всех|любой|любые)([^а-яё]|$)/i,'«все / любые»','Какие именно? Нужен конечный список, иначе объём работ не оценить.'],
+    [/надёжн|надежн|стабильн/i,'«надёжно»','Какая доступность нужна: 99% или 99,9%? Какое допустимое время простоя?'],
+    [/безопасн/i,'«безопасно»','Какие данные защищаем? Есть ли персональные данные и требования 152-ФЗ?'],
+    [/реальн\S* времен|онлайн|сразу|мгновенн/i,'«в реальном времени»','Какая задержка допустима: секунда, минута, час?'],
+    [/много|част/i,'«много / часто»','Какие объёмы и частота? Нужны цифры для оценки нагрузки.'],
+    [/срочн|как можно скорее|asap/i,'«срочно»','Какой дедлайн и что входит в первую версию (MVP)?'],
+    [/улучш|оптимиз/i,'«улучшить»','Какая метрика сейчас и какое значение будем считать успехом?']
+  ];
+  var DOM=[
+    {id:'support', name:'клиентская поддержка', kw:/поддерж|обращен|жалоб|отвеча|оператор|тикет|чат/i,
+     sh:['Клиенты','Операторы поддержки','Руководитель поддержки','Разработка'],
+     story:['клиент','получать ответ на обращение в понятный срок и видеть его статус','не звонить повторно и не уходить к конкурентам'],
+     gwt:[['клиент отправил обращение в рабочее время','обращение попадает в очередь','клиент получает автоответ с номером и ожидаемым сроком'],['обращение не взято в работу за 10 минут','срабатывает таймер SLA','руководитель получает уведомление'],['оператор закрыл обращение','клиент открывает историю','он видит статус «Решено» и ответ']],
+     nfr:['Первый ответ — не позже 15 минут в рабочее время (уточнить)','Время отклика интерфейса оператора ≤ 1 с','Хранение истории обращений — не менее 3 лет'],
+     q:['Какое сейчас среднее время первого ответа и откуда эта цифра?','Какие каналы обращений: чат, почта, телефон, мессенджеры?','Сколько обращений в день и сколько операторов в смене?','Есть ли категории с разным приоритетом?','Какую систему поддержки используете сейчас?'],
+     art:['BPMN: обработка обращения AS-IS / TO-BE','ER: Обращение, Клиент, Оператор, SLA','API: POST /tickets, GET /tickets/{id}/status','Дашборд метрик SLA']},
+    {id:'report', name:'отчётность и аналитика', kw:/отч[её]т|дашборд|продаж|выручк|статистик|аналитик|видеть|метрик/i,
+     sh:['Руководство','Аналитики','Владельцы источников данных','Data-инженеры'],
+     story:['руководитель','каждое утро видеть ключевые показатели в одном месте','принимать решения без ручного сбора данных'],
+     gwt:[['новые данные загружены до 07:00','руководитель открывает дашборд','он видит показатели за вчера с датой обновления'],['загрузка данных упала','наступает 07:30','ответственный получает алерт'],['пользователь выбрал регион','применяется фильтр','все графики пересчитываются за ≤ 3 с']],
+     nfr:['Свежесть данных — до 07:00 ежедневно (уточнить)','Загрузка дашборда ≤ 3 с','Доступ к данным разграничен по ролям'],
+     q:['Какие 5–7 показателей действительно влияют на решения?','Откуда берутся данные и кто владелец каждого источника?','Как часто нужны обновления: раз в день или чаще?','Кто будет смотреть отчёт и что он сделает, увидев отклонение?','Как считаются показатели сейчас — есть ли расхождения между отделами?'],
+     art:['Глоссарий метрик с формулами','Схема потоков данных (DFD)','ER витрины данных','Прототип дашборда']},
+    {id:'delivery', name:'логистика и доставка', kw:/курьер|доставк|карт|маршрут|склад|заказ/i,
+     sh:['Курьеры','Диспетчеры','Клиенты','Склад'],
+     story:['курьер','видеть свои заказы на карте в порядке маршрута','доставлять больше заказов за смену без звонков диспетчеру'],
+     gwt:[['курьер начал смену','он открывает приложение','он видит назначенные заказы на карте и в списке'],['диспетчер переназначил заказ','курьер в сети','заказ появляется у курьера за ≤ 10 с'],['курьер отметил доставку','клиент получает уведомление','статус заказа меняется на «Доставлен»']],
+     nfr:['Обновление позиции курьера — раз в 15–30 с (уточнить)','Работа при плохой связи: офлайн-режим и синхронизация','Поддержка Android 10+ и iOS 15+'],
+     q:['Сколько заказов в смену у курьера и сколько курьеров одновременно?','Кто строит маршрут: система или диспетчер?','Какие статусы заказа есть и кто их меняет?','Что происходит, если клиента нет дома?','С какими системами нужна интеграция: склад, CRM, карты?'],
+     art:['BPMN: жизненный цикл заказа','Диаграмма состояний заказа (UML)','API: GET /courier/orders, PATCH /orders/{id}/status','Карта экранов приложения']},
+    {id:'payment', name:'платежи', kw:/оплат|платеж|платёж|касс|сч[её]т|возврат|деньг/i,
+     sh:['Клиенты','Бухгалтерия','Платёжный провайдер','Служба безопасности'],
+     story:['покупатель','оплатить заказ удобным способом за один шаг','не бросать корзину на этапе оплаты'],
+     gwt:[['клиент нажал «Оплатить»','провайдер подтвердил платёж','заказ получает статус «Оплачен» и клиент — чек'],['провайдер не ответил за 30 с','срабатывает таймаут','клиент видит понятную ошибку и может повторить'],['оформлен возврат','бухгалтер подтвердил','деньги возвращаются тем же способом']],
+     nfr:['Соответствие 54-ФЗ: онлайн-чек','Данные карт не хранятся у нас (PCI DSS — на стороне провайдера)','Идемпотентность платёжных запросов'],
+     q:['Какие способы оплаты нужны: карты, СБП, рассрочка?','Какой провайдер и есть ли договор?','Как сейчас оформляются возвраты?','Сколько платежей в день и в пике?','Кто разбирает спорные платежи?'],
+     art:['Диаграмма последовательности оплаты','Диаграмма состояний платежа','API: POST /payments, POST /payments/{id}/refund','Матрица ошибок провайдера']},
+    {id:'notify', name:'уведомления', kw:/уведомл|напомин|рассылк|пуш|push|sms|смс|письм/i,
+     sh:['Пользователи','Маркетинг','Поддержка','Юристы'],
+     story:['пользователь','получать только важные уведомления в удобном канале','не пропускать события и не раздражаться от спама'],
+     gwt:[['наступило событие из списка','у пользователя включён канал','он получает уведомление за ≤ 1 мин'],['пользователь отписался от рассылок','запускается маркетинговая кампания','ему ничего не отправляется'],['канал доставки недоступен','отправка не удалась','система повторяет попытку и логирует ошибку']],
+     nfr:['Не больше N уведомлений в день на пользователя (уточнить)','Согласие на рассылку по 38-ФЗ «О рекламе»','Журнал отправок для разбора жалоб'],
+     q:['Какие события должны вызывать уведомления?','Какие каналы: push, SMS, email, мессенджер?','Кто может отключать типы уведомлений?','Есть ли тихие часы?','Как измеряем, что уведомления работают?'],
+     art:['Матрица «событие × канал × шаблон»','BPMN: отправка с повторами','API: POST /notifications','Схема очереди сообщений']},
+    {id:'access', name:'доступы и роли', kw:/доступ|(^|[^а-яё])рол[ьиеяю]|(^|[^а-яё])прав[аоу]?([^а-яё]|$)|авториз|парол|логин|(^|[^а-яё])вход|сотрудник|только сво/i,
+     sh:['Пользователи','Администраторы','Служба ИБ','Руководители подразделений'],
+     story:['администратор','выдавать и отзывать доступы по ролям','каждый видел только то, что нужно для работы'],
+     gwt:[['сотрудника назначили на роль','администратор сохранил изменения','права применяются при следующем входе'],['сотрудник уволен','кадровая система передала событие','все доступы отзываются в течение часа'],['пользователь трижды ввёл неверный пароль','он пытается войти снова','вход блокируется на 15 минут']],
+     nfr:['Журнал всех изменений прав','Двухфакторная аутентификация для администраторов','Соответствие 152-ФЗ для персональных данных'],
+     q:['Какие роли есть сейчас и чем они отличаются?','Кто согласует выдачу доступа?','Есть ли единый вход (SSO) или каталог пользователей?','Как часто проводится ревизия прав?','Какие данные считаются чувствительными?'],
+     art:['Ролевая модель: матрица ролей и прав','BPMN: заявка на доступ','ER: Пользователь, Роль, Право','API: POST /roles/{id}/assign']}
+  ];
+  var GENERIC={id:'generic', name:'общий', sh:['Заказчик','Конечные пользователи','Разработка','Тестирование'],
+     story:['пользователь','решить задачу из запроса без лишних шагов','экономить время и не обращаться за помощью'],
+     gwt:[['пользователь начинает основной сценарий','он выполняет действия по шагам','результат достигается без ошибок'],['пользователь ввёл некорректные данные','он отправляет форму','он видит понятную подсказку, что исправить'],['результат сохранён','пользователь возвращается позже','он видит актуальное состояние']],
+     nfr:['Целевое время выполнения сценария (уточнить)','Поддерживаемые устройства и браузеры','Требования к хранению и защите данных'],
+     q:['Какую проблему решаем и как она проявляется сейчас?','Кто пользователи и сколько их?','Как поймём, что задача решена? Какая метрика?','Какие есть ограничения: сроки, бюджет, системы?','Что точно не входит в первую версию?'],
+     art:['BPMN: процесс AS-IS','Use Case диаграмма','Список требований с приоритетами (MoSCoW)','Прототип ключевого экрана']};
+  var EXAMPLES=['Клиенты жалуются, что поддержка отвечает слишком долго. Хочу, чтобы было быстро и удобно.','Хочу каждое утро видеть продажи по всем регионам.','Нужно, чтобы курьеры видели заказы на карте в реальном времени.','Сделайте оплату проще, клиенты бросают корзину.','Надо автоматически отправлять клиентам напоминания.','Нужно, чтобы каждый сотрудник видел только свои данные и всё было безопасно.'];
+  var sbIn=$('sb-in'), sbOut=$('sb-out'), sbEx=$('sb-ex'), sbN=0;
+  EXAMPLES.forEach(function(t){ var b=document.createElement('button'); b.type='button'; b.textContent=t.length>42?t.slice(0,40)+'…':t; b.title=t; b.addEventListener('click', function(){ sbIn.value=t; analyze(); }); sbEx.appendChild(b); });
+  function esc(t){ return String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  function updCount(){ $('sb-count').textContent=sbIn.value.length+' / 300'; }
+  sbIn.addEventListener('input', updCount); updCount();
+  var sbTimer=[];
+  function analyze(){
+    var text=sbIn.value.trim();
+    sbTimer.forEach(clearTimeout); sbTimer=[];
+    if(!text){ sbOut.innerHTML='<div class="blk"><p>Напишите запрос слева — например, «Хочу видеть продажи каждое утро».</p></div>'; return; }
+    sbN++; $('sb-id').textContent='REQ-'+String(sbN).padStart(3,'0');
+    var d=GENERIC, best=0;
+    DOM.forEach(function(x){ var m=text.match(new RegExp(x.kw.source,'gi')); var c=m?m.length:0; if(c>best){ best=c; d=x; } });
+    $('sb-dom').textContent='домен: '+d.name;
+    var vg=VAGUE.filter(function(v){ return v[0].test(text); });
+    var blocks=[];
+    blocks.push('<div class="blk"><h4><i>01</i>Исходный запрос</h4><p class="quote">«'+esc(text)+'»</p></div>');
+    blocks.push('<div class="blk"><h4><i>02</i>Размытые формулировки · '+vg.length+'</h4>'+(vg.length?'<div class="vague">'+vg.map(function(v){ return '<div><mark>'+v[1]+'</mark><span>'+v[2]+'</span></div>'; }).join('')+'</div>':'<p>Явных размытых слов нет, но цифры и границы всё равно уточню на встрече.</p>')+'</div>');
+    blocks.push('<div class="blk"><h4><i>03</i>Стейкхолдеры</h4><div class="tags">'+d.sh.map(function(x){return '<span>'+x+'</span>';}).join('')+'</div></div>');
+    blocks.push('<div class="blk"><h4><i>04</i>User Story</h4><p class="story">Как <b>'+d.story[0]+'</b>, я хочу <b>'+d.story[1]+'</b>, чтобы <b>'+d.story[2]+'</b>.</p></div>');
+    blocks.push('<div class="blk"><h4><i>05</i>Критерии приёмки</h4><div class="gwt">'+d.gwt.map(function(g){ return '<div><span>ДАНО</span>'+g[0]+' <span>КОГДА</span>'+g[1]+' <span>ТОГДА</span>'+g[2]+'</div>'; }).join('')+'</div></div>');
+    blocks.push('<div class="blk"><h4><i>06</i>Нефункциональные требования</h4><ul>'+d.nfr.map(function(x){return '<li>'+x+'</li>';}).join('')+'</ul></div>');
+    blocks.push('<div class="blk"><h4><i>07</i>Вопросы на первую встречу</h4><ol>'+d.q.map(function(x){return '<li>'+x+'</li>';}).join('')+'</ol></div>');
+    blocks.push('<div class="blk"><h4><i>08</i>Что подготовлю дальше</h4><div class="tags">'+d.art.map(function(x){return '<span>'+x+'</span>';}).join('')+'</div></div>');
+    if(reduce){ sbOut.innerHTML=blocks.join(''); return; }
+    sbOut.innerHTML='<div class="thinking"><i></i><i></i><i></i><span>Разбираю запрос…</span></div>';
+    sbTimer.push(setTimeout(function(){
+      sbOut.innerHTML='';
+      blocks.forEach(function(b,i){ sbTimer.push(setTimeout(function(){ sbOut.insertAdjacentHTML('beforeend', b); }, i*170)); });
+    }, 700));
+  }
+  $('sb-form').addEventListener('submit', function(e){ e.preventDefault(); analyze(); });
+  sbIn.addEventListener('keydown', function(e){ if(e.key==='Enter' && (e.ctrlKey||e.metaKey)){ e.preventDefault(); analyze(); } });
+  (function(){ var keep=reduce; reduce=true; analyze(); reduce=keep; })();
+
+  /* ---------- matrix ---------- */
+  var COLS=['Целлюлоза.ру','Уком СВ','NEONFLOW','ИИ-проекты'];
+  var ROWS=[
+    ['Сбор и анализ требований',[1,1,1,0]],
+    ['ФТ и НФТ',[1,1,1,0]],
+    ['User Stories / Use Case',[1,0,0,0]],
+    ['Технические задания',[1,1,1,0]],
+    ['BPMN 2.0',[1,1,0,0]],
+    ['UML',[1,0,1,0]],
+    ['ER / проектирование БД',[1,0,1,0]],
+    ['REST API / JSON',[1,0,0,0]],
+    ['SQL',[1,0,0,0]],
+    ['Jira / Scrum',[1,0,1,0]],
+    ['Приёмка и тестирование',[1,0,1,1]],
+    ['Экономика: ROI, окупаемость',[0,1,0,0]],
+    ['LLM и ИИ-решения',[0,1,0,1]],
+    ['Python',[1,1,0,1]]
+  ];
+  var mx=$('mx');
+  var th='<thead><tr><th scope="col" style="text-align:left">Навык ↓ · Проект →</th>'+COLS.map(function(c,i){return '<th scope="col" data-c="'+i+'">'+c+'</th>';}).join('')+'</tr></thead><tbody>';
+  ROWS.forEach(function(r,ri){
+    th+='<tr data-r="'+ri+'"><th scope="row">'+r[0]+'</th>'+r[1].map(function(v,ci){ return '<td data-c="'+ci+'" data-r="'+ri+'" aria-label="'+(v?'применялся':'не применялся')+'">'+(v?'<span class="m"></span>':'<span class="e"></span>')+'</td>'; }).join('')+'</tr>';
+  });
+  var tot=COLS.map(function(_,ci){ return ROWS.reduce(function(s,r){ return s+r[1][ci]; },0); });
+  th+='</tbody><tfoot><tr><th scope="row" style="text-align:left">Всего навыков</th>'+tot.map(function(t){return '<td>'+t+'</td>';}).join('')+'</tr></tfoot>';
+  mx.innerHTML=th;
+  function clearHot(){ mx.querySelectorAll('.hot').forEach(function(n){ n.classList.remove('hot'); }); }
+  mx.addEventListener('mouseover', function(e){
+    var td=e.target.closest('td[data-c], th[data-c]'); clearHot(); if(!td) return;
+    var c=td.getAttribute('data-c'), r=td.getAttribute('data-r');
+    mx.querySelectorAll('[data-c="'+c+'"]').forEach(function(n){ n.classList.add('hot'); });
+    if(r!==null) mx.querySelectorAll('tr[data-r="'+r+'"] > *').forEach(function(n){ n.classList.add('hot'); });
+  });
+  mx.addEventListener('mouseleave', clearHot);
+
+  /* ---------- reveal ---------- */
+  if(!reduce && 'IntersectionObserver' in window){
+    var rv=[].slice.call(document.querySelectorAll('.case, .metric, .ai .card, .stage'));
+    var io=new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.remove('pre'); io.unobserve(e.target); } }); }, {threshold:.12});
+    rv.forEach(function(n){ var r=n.getBoundingClientRect(); if(r.top>innerHeight){ n.classList.add('reveal','pre'); io.observe(n); } });
+  }
+
+  /* ---------- command palette ---------- */
+  var CMDS=[
+    {t:'Результаты в цифрах', k:'раздел', a:function(){ go('#numbers'); }},
+    {t:'Как я веду задачу', k:'раздел', a:function(){ go('#process'); }},
+    {t:'Кейсы: Целлюлоза.ру, Уком СВ, NEONFLOW', k:'раздел', a:function(){ go('#cases'); }},
+    {t:'API кандидата', k:'раздел', a:function(){ go('#api'); }},
+    {t:'Песочница требований: разобрать задачу', k:'интерактив', a:function(){ go('#sandbox'); setTimeout(function(){ $('sb-in').focus(); }, 500); }},
+    {t:'Матрица навыков', k:'раздел', a:function(){ go('#trace'); }},
+    {t:'Понимаю ИИ изнутри', k:'раздел', a:function(){ go('#ai'); }},
+    {t:'Обо мне и образование', k:'раздел', a:function(){ go('#about'); }},
+    {t:'Контакты', k:'раздел', a:function(){ go('#contact'); }},
+    {t:'Показать процесс AS-IS', k:'схема', a:function(){ go('#bpmn-card'); applyState('as'); }},
+    {t:'Показать процесс TO-BE', k:'схема', a:function(){ go('#bpmn-card'); applyState('to'); }},
+    {t:'Скопировать email', k:'действие', a:function(){ copyMail('toast-foot'); go('#contact'); }},
+    {t:'Сменить тему', k:'действие', a:toggleTheme},
+    {t:'Открыть Telegram', k:'ссылка', href:'https://t.me/SA_BA_ML'},
+    {t:'Открыть GitHub', k:'ссылка', href:'https://github.com/HPAINH'},
+    {t:'Портфолио Data Science', k:'ссылка', href:'https://hpainh.github.io/portfolio_data_science/'}
+  ];
+  function go(sel){ var n=document.querySelector(sel); if(n) n.scrollIntoView({behavior:reduce?'auto':'smooth', block:'start'}); }
+  var pal=$('pal'), pin=$('pal-in'), plist=$('pal-list'), sel=0, shown=[];
+  function renderPal(){
+    var q=pin.value.trim().toLowerCase();
+    shown=CMDS.filter(function(c){ return !q || c.t.toLowerCase().indexOf(q)>=0 || c.k.indexOf(q)>=0; });
+    sel=Math.min(sel, Math.max(0, shown.length-1));
+    plist.innerHTML='';
+    if(!shown.length){ var li=document.createElement('li'); li.textContent='Ничего не найдено'; plist.appendChild(li); return; }
+    shown.forEach(function(c,i){
+      var li=document.createElement('li'); li.setAttribute('role','option'); if(i===sel) li.className='on';
+      if(c.href){ var a=document.createElement('a'); a.href=c.href; a.target='_blank'; a.rel='noopener'; a.style.cssText='color:inherit;text-decoration:none;flex:1'; a.textContent=c.t; li.appendChild(a); }
+      else { var s1=document.createElement('span'); s1.textContent=c.t; li.appendChild(s1); }
+      var s2=document.createElement('span'); s2.textContent=c.k; li.appendChild(s2);
+      li.addEventListener('mouseenter', function(){ sel=i; mark(); });
+      li.addEventListener('click', function(e){ if(!c.href){ e.preventDefault(); } exec(c); });
+      plist.appendChild(li);
+    });
+  }
+  function mark(){ [].forEach.call(plist.children, function(li,i){ li.classList.toggle('on', i===sel); }); }
+  function exec(c){ closePal(); if(c.a) c.a(); }
+  function openPal(){ pal.hidden=false; pin.value=''; sel=0; renderPal(); setTimeout(function(){ pin.focus(); }, 10); }
+  function closePal(){ pal.hidden=true; }
+  $('pal-btn').addEventListener('click', openPal);
+  pal.addEventListener('click', function(e){ if(e.target===pal) closePal(); });
+  pin.addEventListener('input', function(){ sel=0; renderPal(); });
+  document.addEventListener('keydown', function(e){
+    if((e.ctrlKey||e.metaKey) && (e.key==='k'||e.key==='K'||e.key==='л'||e.key==='Л')){ e.preventDefault(); pal.hidden?openPal():closePal(); return; }
+    if(pal.hidden) return;
+    if(e.key==='Escape'){ closePal(); }
+    else if(e.key==='ArrowDown'){ e.preventDefault(); sel=Math.min(shown.length-1, sel+1); mark(); }
+    else if(e.key==='ArrowUp'){ e.preventDefault(); sel=Math.max(0, sel-1); mark(); }
+    else if(e.key==='Enter'){ e.preventDefault(); var c=shown[sel]; if(!c) return; if(c.href){ plist.children[sel].querySelector('a').click(); closePal(); } else exec(c); }
+  });
+})();
+</script>
+
+</body></html>
